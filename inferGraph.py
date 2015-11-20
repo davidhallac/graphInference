@@ -992,7 +992,7 @@ def ADMM_x(entry):
     global rho
     variables = entry[X_VARS]
     norms = 0
-    print "stop a"
+    t = time.time()
     #-----------------------Proximal operator ---------------------------
     x_var = [] # proximal update for the variable x
     if(__builtin__.len(entry[1].args) > 1 ):
@@ -1027,10 +1027,12 @@ def ADMM_x(entry):
 #        print 'x_update = ',x_var
         solution = numpy.matrix(x_var).T
         writeValue(node_vals, entry[X_IND] + variables[0][3], solution, variables[0][2].size[0]) 
+        print "Normal Node: Time = ", time.time() - t
     else:
 #        print 'we are in the dummy node'
         x_var = [] # no variable to update for dummy node
-    print "stop bb"
+        print "Weird node, Time = ", time.time() - t
+
     #-----------------------Proximal operator ---------------------------
 #    print 'end of proximal operator'
 

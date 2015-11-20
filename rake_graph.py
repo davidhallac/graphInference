@@ -11,7 +11,7 @@ import time
 
 #Problem params
 size = 50
-timesteps = 40
+timesteps = 80
 samplesPerStep = 10
 timeShift = 3 #Number of steps till new covariance matrix appears
 eps = 1e-2

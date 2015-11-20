@@ -11,7 +11,7 @@ import time
 
 #Problem params
 size = 500
-timesteps = 2
+timesteps = 8
 samplesPerStep = 10
 timeShift = 3 #Number of steps till new covariance matrix appears
 eps = 1e-2
@@ -64,7 +64,7 @@ for i in range(timesteps):
 
 
 t = time.time()
-gvx.Solve( NumProcessors = 4, MaxIters = 3)
+gvx.Solve( NumProcessors = 20, MaxIters = 3)
 end = time.time() - t
 # t = time.time()
 #gvx.Solve(UseADMM=False)

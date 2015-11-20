@@ -300,7 +300,8 @@ class TGraphVX(TUNGraph):
                     verbose):
         global node_vals, edge_z_vals, edge_u_vals, rho
         global getValue, rho_update_func
-
+        origTime = time.time()
+        print "Starting at ", origTime
         if numProcessors <= 0:
             num_processors = multiprocessing.cpu_count()
         else:
@@ -411,6 +412,7 @@ class TGraphVX(TUNGraph):
         # Proceed until convergence criteria are achieved or the maximum
         # number of iterations has passed
         t4 = time.time()
+        print "Setup takes", t4 - origTime
         while num_iterations <= maxIters:
             # Check convergence criteria
             if num_iterations != 0:
@@ -992,7 +994,7 @@ def ADMM_x(entry):
     global rho
     variables = entry[X_VARS]
     norms = 0
-    t = time.time()
+
     #-----------------------Proximal operator ---------------------------
     x_var = [] # proximal update for the variable x
     if(__builtin__.len(entry[1].args) > 1 ):
@@ -1019,21 +1021,16 @@ def ADMM_x(entry):
         A[numpy.triu_indices(numpymat.shape[1])] = a 
         temp = A.diagonal()
         A = (A + A.T) - numpy.diag(temp)    
-        t2 = time.time()
-        print "1st checkpoint took ", t2-t
         d, q = numpy.linalg.eigh(rho*(A)-numpymat)
-        t3 = time.time()
-        print "2nd checkpoint took ", t3-t2
         q = numpy.matrix(q)
         eta = entry[X_DEG]*rho/n_t
         X = ( 1/(2*eta) )*q*( numpy.diag(d + numpy.sqrt(numpy.square(d) + (4*eta)*numpy.ones(d.shape))) )*q.T
         x_var = X[numpy.triu_indices(numpymat.shape[1])] # extract upper triangular part as update variable      
 #        print 'x_update = ',x_var
         solution = numpy.matrix(x_var).T
-        t4 = time.time()
-        print "3rd checkpoint took ", t4-t3
+        t = time.time()
         writeValue(node_vals, entry[X_IND] + variables[0][3], solution, variables[0][2].size[0]) 
-        print "Normal Node: Time = ", time.time() - t4
+        print "Normal Node: Time = ", time.time() - t
     else:
 #        print 'we are in the dummy node'
         x_var = [] # no variable to update for dummy node

@@ -410,7 +410,7 @@ class TGraphVX(TUNGraph):
         z_old = getValue(edge_z_vals, 0, z_length)
         # Proceed until convergence criteria are achieved or the maximum
         # number of iterations has passed
-        t4 = 0
+        t4 = time.time()
         while num_iterations <= maxIters:
             # Check convergence criteria
             if num_iterations != 0:

@@ -10,7 +10,7 @@ import matplotlib.animation as an
 import time
 
 #Problem params
-size = 800
+size = 100
 timesteps = 2
 samplesPerStep = 10
 timeShift = 3 #Number of steps till new covariance matrix appears
@@ -64,7 +64,7 @@ for i in range(timesteps):
 
 
 t = time.time()
-gvx.Solve( NumProcessors = 3, MaxIters = 3)
+gvx.Solve( NumProcessors = 1, MaxIters = 3)
 end = time.time() - t
 # t = time.time()
 #gvx.Solve(UseADMM=False)

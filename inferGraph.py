@@ -1023,7 +1023,7 @@ def ADMM_x(entry):
         print "1st checkpoint took ", t2-t
         d, q = numpy.linalg.eigh(rho*(A)-numpymat)
         t3 = time.time()
-        print "2nd checkpoint took ", t3-2
+        print "2nd checkpoint took ", t3-t2
         q = numpy.matrix(q)
         eta = entry[X_DEG]*rho/n_t
         X = ( 1/(2*eta) )*q*( numpy.diag(d + numpy.sqrt(numpy.square(d) + (4*eta)*numpy.ones(d.shape))) )*q.T

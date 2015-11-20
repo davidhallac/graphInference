@@ -10,7 +10,7 @@ import matplotlib.animation as an
 import time
 
 #Problem params
-size = 100
+size = 500
 timesteps = 2
 samplesPerStep = 10
 timeShift = 3 #Number of steps till new covariance matrix appears

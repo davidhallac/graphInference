@@ -363,8 +363,8 @@ class TGraphVX(TUNGraph):
                 info_j[X_VARS], info_j[X_LEN], info_j[X_IND], ind_zji, ind_uji)
             edge_list.append(tup)
             edge_info[etup] = tup
-        edge_z_vals = multiprocessing.Array('d', [0.0] * length)
-        edge_u_vals = multiprocessing.Array('d', [0.0] * length)
+        edge_z_vals = multiprocessing.Array('d', [0.0] * length, lock=False)
+        edge_u_vals = multiprocessing.Array('d', [0.0] * length, lock=False)
         z_length = length
 
         # Populate sparse matrix A.
@@ -969,12 +969,9 @@ def getValue(arr, index, length):
 # Write value of numpy array nparr (with given length) to a shared Array at
 # the given starting index.
 def writeValue(sharedarr, index, nparr, length):
-    t = time.time()
     if length == 1:
         nparr = [nparr]
     sharedarr[index:(index + length)] = nparr
-    print "IN SHARED ARRAY: TOOK ", time.time() - t
-    print "length = ", length
 
 # Write the values for all of the Variables involved in a given Objective to
 # the given shared Array.

@@ -332,7 +332,7 @@ class TGraphVX(TUNGraph):
             node_info[nid] = (nid, obj, variables, con, length, size, deg,\
                 neighbors)
             length += size
-        node_vals = multiprocessing.Array('d', [0.0] * length)
+        node_vals = multiprocessing.Array('d', [0.0] * length, lock=False)
         x_length = length
 
         # Organize information for each node in final edge_list structure and

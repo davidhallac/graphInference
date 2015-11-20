@@ -435,18 +435,19 @@ class TGraphVX(TUNGraph):
             if verbose:
                 # Debugging information prints current iteration #
                 print 'Iteration %d' % num_iterations
-            print 'Iteration %d' % num_iterations
-            t = time.time()
-            print "Starting X-update. Intermediate stuff took ", t-t4
+            
+            # print 'Iteration %d' % num_iterations
+            # t = time.time()
+            # print "Starting X-update. Intermediate stuff took ", t-t4
             pool.map(ADMM_x, node_list)
-            t2 = time.time()
-            print "X-update took", t2 - t
+            # t2 = time.time()
+            # print "X-update took", t2 - t
             pool.map(ADMM_z, edge_list)
-            t3 = time.time()            
-            print "z-update took", t3 - t2
+            # t3 = time.time()            
+            # print "z-update took", t3 - t2
             pool.map(ADMM_u, edge_list)
-            t4 = time.time()
-            print "u-update took", t4-t3
+            # t4 = time.time()
+            # print "u-update took", t4-t3
         pool.close()
         pool.join()
 
@@ -991,7 +992,7 @@ def ADMM_x(entry):
     global rho
     variables = entry[X_VARS]
     norms = 0
-    
+    print "stop a"
     #-----------------------Proximal operator ---------------------------
     x_var = [] # proximal update for the variable x
     if(__builtin__.len(entry[1].args) > 1 ):
@@ -1029,6 +1030,7 @@ def ADMM_x(entry):
     else:
 #        print 'we are in the dummy node'
         x_var = [] # no variable to update for dummy node
+    print "stop b"
     #-----------------------Proximal operator ---------------------------
 #    print 'end of proximal operator'
 

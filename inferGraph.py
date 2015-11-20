@@ -436,18 +436,18 @@ class TGraphVX(TUNGraph):
                 # Debugging information prints current iteration #
                 print 'Iteration %d' % num_iterations
             
-            # print 'Iteration %d' % num_iterations
-            # t = time.time()
-            # print "Starting X-update. Intermediate stuff took ", t-t4
+            print 'Iteration %d' % num_iterations
+            t = time.time()
+            print "Starting X-update. Intermediate stuff took ", t-t4
             pool.map(ADMM_x, node_list)
-            # t2 = time.time()
-            # print "X-update took", t2 - t
+            t2 = time.time()
+            print "X-update took", t2 - t
             pool.map(ADMM_z, edge_list)
-            # t3 = time.time()            
-            # print "z-update took", t3 - t2
+            t3 = time.time()            
+            print "z-update took", t3 - t2
             pool.map(ADMM_u, edge_list)
-            # t4 = time.time()
-            # print "u-update took", t4-t3
+            t4 = time.time()
+            print "u-update took", t4-t3
         pool.close()
         pool.join()
 

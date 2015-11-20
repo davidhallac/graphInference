@@ -1030,7 +1030,7 @@ def ADMM_x(entry):
         solution = numpy.matrix(x_var).T
         t = time.time()
         writeValue(node_vals, entry[X_IND] + variables[0][3], solution, variables[0][2].size[0]) 
-        print "Normal Node: Time = ", time.time() - t
+        print "Writing to file for x-update took = ", time.time() - t
     else:
 #        print 'we are in the dummy node'
         x_var = [] # no variable to update for dummy node
@@ -1143,11 +1143,12 @@ def ADMM_z(entry):
 ##    print 'z_ij = ', z_ij#, '\nz_ji = ', z_ji
     solution_i = numpy.matrix(z_ij).T
     solution_j = numpy.matrix(z_ji).T
+    t = time.time()
     if (NID_diff >= -1):
         writeValue(edge_z_vals, entry[Z_ZIJIND] + variables_i[0][3], solution_i, variables_i[0][2].size[0])
     if (NID_diff <= 1):
         writeValue(edge_z_vals, entry[Z_ZJIIND] + variables_j[0][3], solution_j, variables_j[0][2].size[0])
-
+    print "Filewriting for z-update took ", time.time() - t
 #    -----------------------Proximal operator ---------------------------    
 #    print 'end of proximal operator'
 #    

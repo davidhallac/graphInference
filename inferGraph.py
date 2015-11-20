@@ -972,9 +972,9 @@ def writeValue(sharedarr, index, nparr, length):
     t = time.time()
     if length == 1:
         nparr = [nparr]
-    print "SHARED CHECKPOINT 1", time.time() - t
     sharedarr[index:(index + length)] = nparr
     print "IN SHARED ARRAY: TOOK ", time.time() - t
+    print "length = ", length
 
 # Write the values for all of the Variables involved in a given Objective to
 # the given shared Array.

@@ -410,6 +410,7 @@ class TGraphVX(TUNGraph):
         z_old = getValue(edge_z_vals, 0, z_length)
         # Proceed until convergence criteria are achieved or the maximum
         # number of iterations has passed
+        t4 = 0
         while num_iterations <= maxIters:
             # Check convergence criteria
             if num_iterations != 0:
@@ -434,9 +435,18 @@ class TGraphVX(TUNGraph):
             if verbose:
                 # Debugging information prints current iteration #
                 print 'Iteration %d' % num_iterations
+            print 'Iteration %d' % num_iterations
+            t = time.time()
+            print "Starting X-update. Intermediate stuff took ", t-t4
             pool.map(ADMM_x, node_list)
+            t2 = time.time()
+            print "X-update took", t2 - t
             pool.map(ADMM_z, edge_list)
+            t3 = time.time()            
+            print "z-update took", t3 - t2
             pool.map(ADMM_u, edge_list)
+            t4 = time.time()
+            print "u-update took", t4-t3
         pool.close()
         pool.join()
 

@@ -10,8 +10,8 @@ import matplotlib.animation as an
 import time
 
 #Problem params
-size = 10
-timesteps = 100
+size = 50
+timesteps = 40
 samplesPerStep = 10
 timeShift = 3 #Number of steps till new covariance matrix appears
 eps = 1e-2
@@ -64,7 +64,7 @@ for i in range(timesteps):
 
 
 t = time.time()
-gvx.Solve(UseADMM=True,Verbose=True,MaxIters=2)
+gvx.Solve()#, NumProcessors = 1)
 end = time.time() - t
 # t = time.time()
 #gvx.Solve(UseADMM=False)
@@ -101,10 +101,10 @@ for nodeID in range(timesteps):
 	# ax2.set_title('S(SnapVX)')
 	# ims.append([im1, im2])
 
-	print "Timestamp", nodeID, ": Actual Inverse Covariance"
-	print S_actual
-	print "Predicted Inverse Covariance:"
-	print S_est
+	# print "Timestamp", nodeID, ": Actual Inverse Covariance"
+	# print S_actual
+	# print "Predicted Inverse Covariance:"
+	# print S_est
 	totalError = totalError + np.linalg.norm(S_actual - np.matrix(S_est), 'fro')
 
 

@@ -64,7 +64,7 @@ for i in range(timesteps):
 
 
 t = time.time()
-gvx.Solve( NumProcessors = 2, MaxIters = 3)
+gvx.Solve( NumProcessors = 3, MaxIters = 3)
 end = time.time() - t
 # t = time.time()
 #gvx.Solve(UseADMM=False)

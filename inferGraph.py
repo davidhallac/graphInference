@@ -1030,7 +1030,7 @@ def ADMM_x(entry):
     else:
 #        print 'we are in the dummy node'
         x_var = [] # no variable to update for dummy node
-    print "stop b"
+    print "stop bb"
     #-----------------------Proximal operator ---------------------------
 #    print 'end of proximal operator'
 

@@ -996,7 +996,6 @@ def ADMM_x(entry):
     #-----------------------Proximal operator ---------------------------
     x_var = [] # proximal update for the variable x
     if(__builtin__.len(entry[1].args) > 1 ):
-        print "Normal Node starting"
 #        print 'we are in logdet + trace node'
         cvxpyMat = entry[1].args[1].args[0].args[0]
         numpymat = cvxpyMat.value

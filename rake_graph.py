@@ -1,5 +1,5 @@
 
-from snapvx2 import *
+from inferGraph import *
 import numpy as np
 import numpy.linalg as alg
 import scipy as spy

@@ -973,7 +973,10 @@ def getValue(arr, index, length):
 def writeValue(sharedarr, index, nparr, length):
     if length == 1:
         nparr = [nparr]
+    print "WRITING VALUE", length
+    temp = time.time()
     sharedarr[index:(index + length)] = nparr
+    print time.time() - temp
 
 # Write the values for all of the Variables involved in a given Objective to
 # the given shared Array.
@@ -1144,8 +1147,6 @@ def ADMM_z(entry):
     solution_i = numpy.matrix(z_ij).T
     solution_j = numpy.matrix(z_ji).T
     t = time.time()
-    print "WRITING FILES"
-    print entry[Z_ZIJIND] + variables_i[0][3], solution_i, variables_i[0][2].size[0]
     if (NID_diff >= -1):
         writeValue(edge_z_vals, entry[Z_ZIJIND] + variables_i[0][3], solution_i, variables_i[0][2].size[0])
     if (NID_diff <= 1):
@@ -1211,7 +1212,7 @@ def ADMM_u(entry):
           getValue(node_vals, entry[Z_XIIND], size_i) -\
           getValue(edge_z_vals, entry[Z_ZIJIND], size_i)
     writeValue(edge_u_vals, entry[Z_UIJIND], uij, size_i)
-    print "U-update values", entry[Z_UIJIND], uij, size_i
+
     size_j = entry[Z_JLEN]
     uji = getValue(edge_u_vals, entry[Z_UJIIND], size_j) +\
           getValue(node_vals, entry[Z_XJIND], size_j) -\

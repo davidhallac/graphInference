@@ -973,10 +973,10 @@ def getValue(arr, index, length):
 def writeValue(sharedarr, index, nparr, length):
     if length == 1:
         nparr = [nparr]
-    print "WRITING VALUE", length
+    print "WRITING VALUE", index, length
     temp = time.time()
     sharedarr[index:(index + length)] = nparr
-    print time.time() - temp
+    print "Writing took", time.time() - temp
 
 # Write the values for all of the Variables involved in a given Objective to
 # the given shared Array.

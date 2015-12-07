@@ -1032,7 +1032,6 @@ def ADMM_x(entry):
 #        print 'x_update = ',x_var
         solution = numpy.array(x_var).T
         writeValue(node_vals, entry[X_IND] + variables[0][3], solution, variables[0][2].size[0]) 
-        print "Writing to file for x-update took = ", time.time() - t
     else:
 #        print 'we are in the dummy node'
         x_var = [] # no variable to update for dummy node
@@ -1210,7 +1209,7 @@ def ADMM_u(entry):
           getValue(node_vals, entry[Z_XIIND], size_i) -\
           getValue(edge_z_vals, entry[Z_ZIJIND], size_i)
     writeValue(edge_u_vals, entry[Z_UIJIND], uij, size_i)
-    print "UIJ TYPE", type(uij), uij.shape
+
     size_j = entry[Z_JLEN]
     uji = getValue(edge_u_vals, entry[Z_UJIIND], size_j) +\
           getValue(node_vals, entry[Z_XJIND], size_j) -\

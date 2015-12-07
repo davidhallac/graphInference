@@ -1031,6 +1031,7 @@ def ADMM_x(entry):
         x_var = X[numpy.triu_indices(numpymat.shape[1])] # extract upper triangular part as update variable      
 #        print 'x_update = ',x_var
         solution = numpy.array(x_var).T
+        print type(solution), solution.shape
         writeValue(node_vals, entry[X_IND] + variables[0][3], solution, variables[0][2].size[0]) 
     else:
 #        print 'we are in the dummy node'

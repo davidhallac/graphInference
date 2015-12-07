@@ -1152,7 +1152,7 @@ def ADMM_z(entry):
     if (NID_diff <= 1):
         writeValue(edge_z_vals, entry[Z_ZJIIND] + variables_j[0][3], solution_j, variables_j[0][2].size[0])
     print "Filewriting for z-update took ", time.time() - t
-    print "Z-type: ", type(solution_i) 
+    print "Z-type: ", type(solution_i), type(z_ij) 
 #    -----------------------Proximal operator ---------------------------    
 #    print 'end of proximal operator'
 #    

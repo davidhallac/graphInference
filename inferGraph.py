@@ -1031,12 +1031,8 @@ def ADMM_x(entry):
         x_var = X[numpy.triu_indices(numpymat.shape[1])] # extract upper triangular part as update variable      
 #        print 'x_update = ',x_var
         solution = numpy.array(x_var).T
-        t = time.time()
         writeValue(node_vals, entry[X_IND] + variables[0][3], solution, variables[0][2].size[0]) 
         print "Writing to file for x-update took = ", time.time() - t
-        print type(x_var), x_var.shape
-        tt2 = numpy.array(x_var).T
-        print type(tt2), tt2.shape
     else:
 #        print 'we are in the dummy node'
         x_var = [] # no variable to update for dummy node

@@ -976,7 +976,7 @@ def writeValue(sharedarr, index, nparr, length):
     #print "WRITING VALUE", index, length
     temp = time.time()
     sharedarr[index:(index + length)] = nparr
-    #print "Time to write:", time.time() - temp
+    print "Time to write:", time.time() - temp
 
 # Write the values for all of the Variables involved in a given Objective to
 # the given shared Array.

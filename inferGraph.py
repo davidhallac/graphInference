@@ -1144,6 +1144,7 @@ def ADMM_z(entry):
     solution_i = numpy.matrix(z_ij).T
     solution_j = numpy.matrix(z_ji).T
     t = time.time()
+    print "WRITING FILES"
     if (NID_diff >= -1):
         writeValue(edge_z_vals, entry[Z_ZIJIND] + variables_i[0][3], solution_i, variables_i[0][2].size[0])
     if (NID_diff <= 1):

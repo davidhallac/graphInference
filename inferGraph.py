@@ -1035,7 +1035,7 @@ def ADMM_x(entry):
         writeValue(node_vals, entry[X_IND] + variables[0][3], solution, variables[0][2].size[0]) 
         print "Writing to file for x-update took = ", time.time() - t
         print type(x_var), x_var.shape
-        tt2 = numpy.array(x_var)
+        tt2 = numpy.array(x_var).T
         print type(tt2), tt2.shape
     else:
 #        print 'we are in the dummy node'

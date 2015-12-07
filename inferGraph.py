@@ -1213,7 +1213,7 @@ def ADMM_u(entry):
           getValue(node_vals, entry[Z_XIIND], size_i) -\
           getValue(edge_z_vals, entry[Z_ZIJIND], size_i)
     writeValue(edge_u_vals, entry[Z_UIJIND], uij, size_i)
-    print "UIJ TYPE", type(uij)
+    print "UIJ TYPE", type(uij), uij.shape
     size_j = entry[Z_JLEN]
     uji = getValue(edge_u_vals, entry[Z_UJIIND], size_j) +\
           getValue(node_vals, entry[Z_XJIND], size_j) -\

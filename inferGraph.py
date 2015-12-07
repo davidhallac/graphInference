@@ -1148,9 +1148,9 @@ def ADMM_z(entry):
     solution_j = numpy.matrix(z_ji).T
     t = time.time()
     if (NID_diff >= -1):
-        writeValue(edge_z_vals, entry[Z_ZIJIND] + variables_i[0][3], solution_i, variables_i[0][2].size[0])
+        writeValue(edge_z_vals, entry[Z_ZIJIND] + variables_i[0][3], z_ij, variables_i[0][2].size[0])
     if (NID_diff <= 1):
-        writeValue(edge_z_vals, entry[Z_ZJIIND] + variables_j[0][3], solution_j, variables_j[0][2].size[0])
+        writeValue(edge_z_vals, entry[Z_ZJIIND] + variables_j[0][3], z_ji, variables_j[0][2].size[0])
     print "Filewriting for z-update took ", time.time() - t
     print "Z-type: ", type(z_ij), z_ij.shape
 #    -----------------------Proximal operator ---------------------------    

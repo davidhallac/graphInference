@@ -973,10 +973,10 @@ def getValue(arr, index, length):
 def writeValue(sharedarr, index, nparr, length):
     if length == 1:
         nparr = [nparr]
-    print "WRITING VALUE", index, length
+    #print "WRITING VALUE", index, length
     temp = time.time()
     sharedarr[index:(index + length)] = nparr
-    print "Writing took", time.time() - temp
+    #print "Time to write:", time.time() - temp
 
 # Write the values for all of the Variables involved in a given Objective to
 # the given shared Array.
@@ -1152,6 +1152,7 @@ def ADMM_z(entry):
     if (NID_diff <= 1):
         writeValue(edge_z_vals, entry[Z_ZJIIND] + variables_j[0][3], solution_j, variables_j[0][2].size[0])
     print "Filewriting for z-update took ", time.time() - t
+    print "Z-type: ", type(solution_i) 
 #    -----------------------Proximal operator ---------------------------    
 #    print 'end of proximal operator'
 #    
@@ -1212,7 +1213,7 @@ def ADMM_u(entry):
           getValue(node_vals, entry[Z_XIIND], size_i) -\
           getValue(edge_z_vals, entry[Z_ZIJIND], size_i)
     writeValue(edge_u_vals, entry[Z_UIJIND], uij, size_i)
-
+    print "UIJ TYPE", type(uij)
     size_j = entry[Z_JLEN]
     uji = getValue(edge_u_vals, entry[Z_UJIIND], size_j) +\
           getValue(node_vals, entry[Z_XJIND], size_j) -\

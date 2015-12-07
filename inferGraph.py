@@ -1030,10 +1030,8 @@ def ADMM_x(entry):
         X = ( 1/(2*eta) )*q*( numpy.diag(d + numpy.sqrt(numpy.square(d) + (4*eta)*numpy.ones(d.shape))) )*q.T
         x_var = X[numpy.triu_indices(numpymat.shape[1])] # extract upper triangular part as update variable      
 #        print 'x_update = ',x_var
-        solution = numpy.matrix(x_var).T
-        t = time.time()
-        writeValue(node_vals, entry[X_IND] + variables[0][3], solution, variables[0][2].size[0]) 
-        print "Writing to file for x-update took = ", time.time() - t
+        # solution = numpy.matrix(x_var).T
+        writeValue(node_vals, entry[X_IND] + variables[0][3], x_var, variables[0][2].size[0]) 
     else:
 #        print 'we are in the dummy node'
         x_var = [] # no variable to update for dummy node
@@ -1144,15 +1142,13 @@ def ADMM_z(entry):
         ind = (a_ji < -eta/2)
         z_ji[ind] = a_ji[ind] + eta/2
 ##    print 'z_ij = ', z_ij#, '\nz_ji = ', z_ji
-    solution_i = numpy.matrix(z_ij).T
-    solution_j = numpy.matrix(z_ji).T
-    t = time.time()
+    # solution_i = numpy.matrix(z_ij).T
+    # solution_j = numpy.matrix(z_ji).T
+
     if (NID_diff >= -1):
         writeValue(edge_z_vals, entry[Z_ZIJIND] + variables_i[0][3], z_ij, variables_i[0][2].size[0])
     if (NID_diff <= 1):
         writeValue(edge_z_vals, entry[Z_ZJIIND] + variables_j[0][3], z_ji, variables_j[0][2].size[0])
-    print "Filewriting for z-update took ", time.time() - t
-    print "Z-type: ", type(z_ij), z_ij.shape
 #    -----------------------Proximal operator ---------------------------    
 #    print 'end of proximal operator'
 #    

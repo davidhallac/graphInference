@@ -1128,8 +1128,8 @@ def ADMM_x(entry):
 #        print 'x_update = ',x_var
 #        solution = numpy.matrix(x_var).T
         x_update = Prox_logdet(numpymat, A, eta)
-        print type(x_update)
-        writeValue(node_vals, entry[X_IND] + variables[0][3], x_update, variables[0][2].size[0]) 
+        solution = numpy.array(x_update).T.reshape(-1)
+        writeValue(node_vals, entry[X_IND] + variables[0][3], solution, variables[0][2].size[0]) 
     else:
 #        print 'we are in the dummy node'
         x_update = [] # no variable to update for dummy node

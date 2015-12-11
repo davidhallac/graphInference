@@ -1230,18 +1230,16 @@ def ADMM_z(entry, index_penalty = 1):
         else:
             print "Test 1"
             A_ij = numpy.zeros([n,n])
+            print "Test 2", n, numpy.triu_indices(n)
             A_ij[numpy.triu_indices(n)] = a_ij 
-            print "Test 2"
+            print "Test 3"
             temp = A_ij.diagonal()
             A_ij = (A_ij + A_ij.T) - numpy.diag(temp)             
-            print "Test 3" 
 
             A_ji = numpy.zeros([n,n])
             A_ji[numpy.triu_indices(n)] = a_ij 
-            print "Test 4"
             temp = A_ji.diagonal()
             A_ji = (A_ji + A_ji.T) - numpy.diag(temp)
-            print "Test 5"
             if index_penalty == 3:
                 [Z_ij, Z_ji] = Prox_twonorm_penalty(A_ij, A_ji, eta)
             elif index_penalty == 4:

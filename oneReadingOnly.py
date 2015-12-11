@@ -10,7 +10,7 @@ import matplotlib.animation as an
 import time
 
 #Problem params
-size = 100
+size = 10
 timesteps = 100#8
 samplesPerStep = 1
 timeShift = 999 #Number of steps till new covariance matrix appears
@@ -97,16 +97,16 @@ for nodeID in range(timesteps):
 	else:
 		S_actual = S_true2.copy()
 
-	# im1 = ax1.imshow(S_actual.copy(), interpolation='nearest', cmap = 'binary')
-	# ax1.set_title('S_true')
-	# im2 = ax2.imshow(S_est.copy(), interpolation='nearest', cmap = 'binary')
-	# ax2.set_title('S(SnapVX)')
-	# ims.append([im1, im2])
+	im1 = ax1.imshow(S_actual.copy(), interpolation='nearest', cmap = 'binary')
+	ax1.set_title('S_true')
+	im2 = ax2.imshow(S_est.copy(), interpolation='nearest', cmap = 'binary')
+	ax2.set_title('S(SnapVX)')
+	ims.append([im1, im2])
 
-	# print "Timestamp", nodeID, ": Actual Inverse Covariance"
-	# print S_actual
-	# print "Predicted Inverse Covariance:"
-	# print S_est
+	print "Timestamp", nodeID, ": Actual Inverse Covariance"
+	print S_actual
+	print "Predicted Inverse Covariance:"
+	print S_est
 	totalError = totalError + np.linalg.norm(S_actual - np.matrix(S_est), 'fro')
 
 

@@ -1183,7 +1183,7 @@ def ADMM_z(entry, index_penalty = 1):
     
     #Select this parameter to determine which edge penalty to use:
     #1: L1-norm, 2: Laplacian, 3: L2-norm, 4: Perturbed-node, 5: L-inf norm
-    index_penalty = 4
+    index_penalty = 5
     
     #-----------------------Proximal operator ---------------------------
 #    print entry    
@@ -1228,11 +1228,8 @@ def ADMM_z(entry, index_penalty = 1):
         elif index_penalty == 2:
             [z_ij, z_ji] = Prox_twonorm_Sq_penalty(a_ij, a_ji, numpy.zeros(a_ji.shape), eta)
         else:
-            print "Test 1"
             A_ij = numpy.zeros([n,n])
-            print "Test 2", n, numpy.triu_indices(n)
             A_ij[numpy.triu_indices(n)] = a_ij 
-            print "Test 3"
             temp = A_ij.diagonal()
             A_ij = (A_ij + A_ij.T) - numpy.diag(temp)             
 

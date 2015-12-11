@@ -12,7 +12,7 @@ import time
 #Problem params
 size = 500
 timesteps = 2#8
-samplesPerStep = 10
+samplesPerStep = 1
 timeShift = 3 #Number of steps till new covariance matrix appears
 eps = 1e-2
 #Optimization parameters
@@ -43,7 +43,9 @@ for i in range(timesteps):
 	else:
 		x_samples = np.random.multivariate_normal(np.zeros(size), Cov2, samplesPerStep).T
 	empCov = np.cov(x_samples)
- 
+ 	if (samplesPerStep == 1):
+	 	empCov = x_samples*x_samples.T
+
 #	print empCov
 	#Add Node, edge to previous timestamp
 	n_id = i

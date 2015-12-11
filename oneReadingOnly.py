@@ -97,11 +97,11 @@ for nodeID in range(timesteps):
 	else:
 		S_actual = S_true2.copy()
 
-	im1 = ax1.imshow(S_actual.copy(), interpolation='nearest', cmap = 'binary')
-	ax1.set_title('S_true')
-	im2 = ax2.imshow(S_est.copy(), interpolation='nearest', cmap = 'binary')
-	ax2.set_title('S(SnapVX)')
-	ims.append([im1, im2])
+	# im1 = ax1.imshow(S_actual.copy(), interpolation='nearest', cmap = 'binary')
+	# ax1.set_title('S_true')
+	# im2 = ax2.imshow(S_est.copy(), interpolation='nearest', cmap = 'binary')
+	# ax2.set_title('S(SnapVX)')
+	# ims.append([im1, im2])
 
 	print "Timestamp", nodeID, ": Actual Inverse Covariance"
 	print S_actual

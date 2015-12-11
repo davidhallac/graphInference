@@ -66,7 +66,7 @@ for i in range(timesteps):
 
 
 t = time.time()
-gvx.Solve(verbose=True)
+gvx.Solve(Verbose=True)
 end = time.time() - t
 # t = time.time()
 #gvx.Solve(UseADMM=False)

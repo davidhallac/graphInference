@@ -10,9 +10,9 @@ import matplotlib.animation as an
 import time
 
 #Problem params
-size = 10
-timesteps = 100#8
-samplesPerStep = 1
+size = 500
+timesteps = 2#8
+samplesPerStep = 10
 timeShift = 999 #Number of steps till new covariance matrix appears
 eps = 1e-2
 #Optimization parameters

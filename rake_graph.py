@@ -10,10 +10,10 @@ import matplotlib.animation as an
 import time
 
 #Problem params
-size = 500
-timesteps = 2#8
+size = 10
+timesteps = 100#8
 samplesPerStep = 1
-timeShift = 3 #Number of steps till new covariance matrix appears
+timeShift = 999 #Number of steps till new covariance matrix appears
 eps = 1e-2
 #Optimization parameters
 alpha = 0.1 # Lasso parameter

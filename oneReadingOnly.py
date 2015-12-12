@@ -16,7 +16,7 @@ samplesPerStep = 1
 timeShift = 999 #Number of steps till new covariance matrix appears
 eps = 1e-2
 #Optimization parameters
-alpha = 0.1 # Lasso parameter
+alpha = 0.5 # Lasso parameter
 beta = 99999999 # Weight between basis nodes
 
 

@@ -43,7 +43,8 @@ with open(filename,'r') as f:
 		for line in sample:
 			temp = line.rstrip().split('\t')
 			#Steer_Angle, Velocity, Heading, Steer_Velocity, Brake, Pedal, X_Accel, Y_Accel, RPM
-			region = [temp[1], temp[2], temp[3], temp[12], temp[13],temp[14],temp[16],temp[17],temp[19]]
+			#region = [temp[1], temp[2], temp[3], temp[12], temp[13],temp[14],temp[16],temp[17],temp[19]]
+			region = [temp[2], temp[3], temp[4], temp[13], temp[14],temp[15],temp[17],temp[18],temp[20]]
 			readings[counter,:] = region
 			counter = counter+1
 

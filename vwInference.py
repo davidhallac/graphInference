@@ -19,7 +19,7 @@ eps = 1e-2 #Treat these as essentially 0
 
 
 #Read in file
-filename = "/dfs/scratch0/abhisg/granular_analysis/new_data/0/snapshots_0_2014-03-10_0_4.dat"
+filename = "/dfs/scratch0/abhisg/granular_analysis/new_data/0/2014-03-10/snapshots_0_2014-03-10_0_4.dat"
 if (sys.platform == 'darwin'):
 	filename = "/Users/Hallac/Desktop/vw_data.dat"
 

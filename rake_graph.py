@@ -10,8 +10,8 @@ import matplotlib.animation as an
 import time
 
 #Problem params
-size = 500
-timesteps = 2#8
+size = 20   
+timesteps = 3
 samplesPerStep = 10
 timeShift = 999 #Number of steps till new covariance matrix appears
 eps = 1e-2
@@ -57,7 +57,7 @@ for i in range(timesteps):
 		prev_Nid = n_id - 1
 		currVar = gvx.GetNodeVariables(n_id)
 		prevVar = gvx.GetNodeVariables(prev_Nid)
-		edge_obj = beta*norm(currVar['S'] - prevVar['S'],1)
+		edge_obj = beta*norm(currVar['S'] - prevVar['S'],1) # one norm penalty function
 		gvx.AddEdge(n_id, prev_Nid, Objective=edge_obj)
 
 	#Add rake nodes, edges

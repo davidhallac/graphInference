@@ -31,7 +31,7 @@ from scipy.sparse import lil_matrix
 import sys
 import time
 import __builtin__
-
+import code
 # File format: One edge per line, written as "srcID dstID"
 # Commented lines that start with '#' are ignored
 # Returns a TGraphVX object with the designated edges and nodes
@@ -985,73 +985,82 @@ def Prox_logdet(S, A, eta):
 #        print 'x_update = ',x_var
     return numpy.matrix(x_var).T
     
-def Prox_lasso(a_ij, a_ji, eta, NID_diff):   
+def Prox_lasso(a_ij, a_ji, eta, NID_diff):  
     z_ij = numpy.zeros(a_ij.shape)
     z_ji = numpy.zeros(a_ij.shape)
     
-    if (NID_diff > 1): # for lasso penality between node i with logdet and dummynode j:
-#        print 'we are in lasso penalty edge, alpha = ', entry[1].args[0].value
-        ind = (a_ij > eta)
-        z_ij[ind] = a_ij[ind]-eta
+    k = 0
+    ind = range(a_ij.shape[0])
+    n = int((-1  + numpy.sqrt(1+ 8*a_ij.shape[0]))/2)  
+    for i in range(n,0,-1):
+        ind.remove(k)
+        k = k + i
+
+    if (NID_diff > 1):
+        z_ij[ind] = Prox_onenorm(a_ij[ind], eta)
     else:
-        ind = (a_ij < -eta)
-        z_ij[ind] = a_ij[ind] + eta
+        z_ji[ind] = Prox_onenorm(a_ji[ind], eta)
+#    if (NID_diff > 1): # for lasso penality between node i with logdet and dummynode j:
+##        print 'we are in lasso penalty edge, alpha = ', entry[1].args[0].value
+#        ind = (a_ij > eta)
+#        z_ij[ind] = a_ij[ind]-eta
+#    else:
+#        ind = (a_ij < -eta)
+#        z_ij[ind] = a_ij[ind] + eta
         
     return z_ij.T, z_ji.T
 
+def Prox_onenorm(A, eta):
+    Z = numpy.zeros(A.shape)
+    ind = (A > eta)
+    Z[ind] = A[ind] - eta
+    ind = (A < - eta)
+    Z[ind] = A[ind] + eta
+    return Z
+    
 def Prox_twonorm(A, eta):
-    col_norms = numpy.linalg.norm(A, axis = 0)
-    Z = numpy.dot(A, numpy.diag((numpy.ones(n) - eta/col_norms)*(col_norms > eta)))
+    col_norms = numpy.linalg.norm(A, axis = 0) 
+    Z = numpy.dot(A, numpy.diag((numpy.ones(A.shape[0]) - eta/col_norms)*(col_norms > eta))) 
     return Z 
-    
-def Prox_twonorm_transformation(A, C, D, eta):
-#    CC = numpy.concatenate((C, -C, C), axis = 0)
-    A = numpy.matrix(A)
-    alpha = 1/3.0 
-    Z = ((numpy.identity(A.shape[0]) - alpha* numpy.dot(C.T,C) )*A 
-          + alpha*(C.T)*(Prox_twonorm_function(C*X + V, eta/alpha) - V))
-    Z1 = Z[:n,:]
-    Z2 = Z[n:2*n,:]
-    Z3 = Z[2*n:,:]
-    return Z1,Z2,Z3
 
-def Prox_onenorm_penalty(a_ij, a_ji, eta):
-    # eta = lambda/rho, V s.t. CX + V
+def upper2Full(a):
+    n = (-1  + numpy.sqrt(1+ 8*a.shape[0]))/2  
+    A = numpy.zeros([n,n])
+    A[numpy.triu_indices(n)] = a 
+    temp = A.diagonal()
+    A = (A + A.T) - numpy.diag(temp)             
+    return A
+
+def Prox_penalty(a_ij, a_ji, eta, index_penalty):
+    n = (-1  + numpy.sqrt(1+ 8*a_ij.shape[0]))/2      
     z_ij = (a_ij+a_ji)/2
     z_ji = (a_ij+a_ji)/2
-
-    diff = a_ij - a_ji
-    e = numpy.zeros(z_ij.shape)
-    ind = diff > 2*eta
-    e[ind] = diff[ind] - 2*eta*numpy.ones(z_ij.shape)[ind]
-    ind = diff < -2*eta
-    e[ind] = diff[ind] + 2*eta*numpy.ones(z_ij.shape)[ind]
-    e = e/2
-    
-    z_ij = z_ij + e
-    z_ji = z_ji - e    
-    return z_ij, z_ji
-    
-def Prox_twonorm_Sq_penalty(a_ij, a_ji, V, eta):
-    # eta = lambda/rho, V s.t. CX + V
-    z_ij = (a_ij+a_ji)/2
-    z_ji = (a_ij+a_ji)/2
-    e = ((a_ij - a_ji +V)/(1 + 4*eta) -V)/2
+    alpha = 2
+    d = 0
+    # For onenorm, infnorm, and laplacian penalty, the solution is computed elementwise
+    # Otherwise, the full matrix should be formed in order to compute the solution.
+    if index_penalty == 1:
+        e = Prox_onenorm(a_ij - a_ji + d, alpha*eta) -d
+    elif index_penalty == 3:        
+        e = (a_ij - a_ji + d)/(1 + 2*alpha*eta) -d
+    else:
+        A_ij = upper2Full(a_ij)
+        A_ji = upper2Full(a_ji)
+        if index_penalty == 2:  
+            e = Prox_twonorm(A_ij - A_ji + d, alpha*eta) -d  
+        elif index_penalty == 5:
+            e = Prox_infnorm(A_ij - A_ji + d, alpha*eta) -d 
+        else:
+            MaxIter = 10   
+            [Z_ij, Z_ji] = Prox_node_penalty(A_ij, A_ji, eta, MaxIter)
+            z_ij = (numpy.squeeze(numpy.asarray(Z_ij[numpy.triu_indices(n)])))
+            z_ji = (numpy.squeeze(numpy.asarray(Z_ji[numpy.triu_indices(n)])))
+            return z_ij, z_ji
+        e = e[numpy.triu_indices(n)]  
+    e = e/alpha
     z_ij = z_ij + e
     z_ji = z_ji - e
-    
     return z_ij, z_ji
-
-def Prox_twonorm_penalty(a_ij, a_ji, eta): 
-    a_mean = (a_ij+a_ji)/2
-    a_diff = (a_ij - a_ji)
-    e = Prox_twonorm(a_diff, 2*eta)/2
-#    norm_diff = numpy.linalg.norm(a_diff, axis = 0)
-#    e = numpy.dot(a_diff,numpy.diag((numpy.ones(n)/2 - eta*norm_diff)*(norm_diff > 2*eta)))
-    Z_ij = a_mean + e
-    Z_ji = a_mean - e
-    
-    return Z_ij, Z_ji    
 
 def Prox_node_penalty(A_ij, A_ji, beta, MaxIter):
     global rho
@@ -1059,32 +1068,34 @@ def Prox_node_penalty(A_ij, A_ji, beta, MaxIter):
     n = A_ij.shape[0]
     I = numpy.identity(n)  
     U = numpy.ones([n,n])/n
-    U1 = numpy.copy(U)
-    U2 = numpy.copy(U)
+    U1 = numpy.ones([n,n])/n
+    U2 = numpy.ones([n,n])/n
     theta_1 = numpy.copy(U)
     theta_2 = numpy.copy(U)
     V = numpy.copy(U)
     W = numpy.copy(U)
     
+    gamma = (rho/2)/rho
+    C = numpy.concatenate((I,-I, I), axis = 1)        
+    C = numpy.matrix(C)
+    G = C.T*C + gamma*numpy.identity(3*n)
     for k in range(MaxIter):
         A = ((theta_1 - theta_2 - W - U1) + (W.T - U2))/2
         eta = beta/(2*rho)
         V = Prox_twonorm(A, eta)
     
-        eta = (rho/2)/rho
-        C = numpy.concatenate((I,-I, I), axis = 1)        
-        C = numpy.matrix(C)
-        A = numpy.concatenate([(V+U2).T, A_1, A_2], axis = 0)
+        A = numpy.concatenate([(V+U2).T, A_ij, A_ji], axis = 0)
         D = V + U1
-
-        Z = numpy.linalg.solve(C.T*C + eta*numpy.identity(3*n), - C.T*D + eta* A)
+        Z = numpy.linalg.solve(G, - C.T*D + gamma* A)
         W = Z[:n,:]
         theta_1 = Z[n:2*n,:]
         theta_2 = Z[2*n:,:]    
     
         U1 = U1 + ((V + W) - (theta_1 - theta_2)) 
         U2 = U2 + (V - W.T)
+        
     return theta_1,theta_2
+    
     
     
 # x-update for ADMM for one node
@@ -1114,11 +1125,8 @@ def ADMM_x(entry):
             for (varID, varName, var, offset) in variables:
                 z = getValue(edge_z_vals, zi + offset, var.size[0])
                 u = getValue(edge_u_vals, ui + offset, var.size[0])
-                a += (z-u)  
-        A = numpy.zeros(numpymat.shape)
-        A[numpy.triu_indices(numpymat.shape[1])] = a 
-        temp = A.diagonal()
-        A = (A + A.T) - numpy.diag(temp)    
+                a += (z-u) 
+        A = upper2Full(a)
         A =  A/entry[X_DEG]
 #        d, q = numpy.linalg.eigh((rho*A/n_t)-numpymat)
 #        q = numpy.matrix(q)
@@ -1178,15 +1186,12 @@ def ADMM_x(entry):
 # z-update for ADMM for one edge
 def ADMM_z(entry, index_penalty = 1):
     global rho
-#    objective = entry[Z_OBJ]
-#    constraints = entry[Z_CON]
     
     #Select this parameter to determine which edge penalty to use:
     #1: L1-norm, 2: Laplacian, 3: L2-norm, 4: Perturbed-node, 5: L-inf norm
     index_penalty = 1
     
     #-----------------------Proximal operator ---------------------------
-#    print entry    
     a_ij = [] # 
     flag = 0
     variables_i = entry[Z_IVARS]
@@ -1216,43 +1221,17 @@ def ADMM_z(entry, index_penalty = 1):
     NID_diff  = entry[0][1]-entry[0][0]
 #    print 'entry[0] = ', entry[0], 'NID_diff = ' ,NID_diff 
 #    eta = 2*entry[1].args[0].value/rho
-    eta = entry[1].args[0].value/rho
-    
-    n = (-1  + numpy.sqrt(-1+ 8*a_ij.shape[0]))/2   
-    
-    
-    if (numpy.abs(NID_diff) <= 1): # for psi penalty edge
-        beta = entry[1].args[0].value
-        if index_penalty == 1:
-            [z_ij, z_ji] = Prox_onenorm_penalty(a_ij, a_ji, eta)
-        elif index_penalty == 2:
-            [z_ij, z_ji] = Prox_twonorm_Sq_penalty(a_ij, a_ji, numpy.zeros(a_ji.shape), eta)
-        else:
-            A_ij = numpy.zeros([n,n])
-            A_ij[numpy.triu_indices(n)] = a_ij 
-            temp = A_ij.diagonal()
-            A_ij = (A_ij + A_ij.T) - numpy.diag(temp)             
+    eta = entry[1].args[0].value/rho # where entry[1].args[0].value can be alpha or bete depending on NID_diff
 
-            A_ji = numpy.zeros([n,n])
-            A_ji[numpy.triu_indices(n)] = a_ij 
-            temp = A_ji.diagonal()
-            A_ji = (A_ji + A_ji.T) - numpy.diag(temp)
-            if index_penalty == 3:
-                [Z_ij, Z_ji] = Prox_twonorm_penalty(A_ij, A_ji, eta)
-            elif index_penalty == 4:
-                MaxIter = 10                
-                [Z_ij, Z_ji] = Prox_node_penalty(A_ij, A_ji, beta, MaxIter)
-            else:
-                [Z_ij, Z_ji] = Prox_infnorm_penalty(A_ij, A_ji, eta)
-                
-            z_ij = Z_ij[numpy.triu_indices(n)]
-            z_ji = Z_ji[numpy.triu_indices(n)]
+    if (numpy.abs(NID_diff) <= 1): # for psi penalty edge
+#        beta = entry[1].args[0].value
+        [z_ij, z_ji] =  Prox_penalty(a_ij, a_ji, eta, index_penalty)
 #        print 'we are in psi penalty edge, beta = ', entry[1].args[0].value
     else: 
+#        print 'we are in lasso penalty edge, alpha = ', entry[1].args[0].value
         [z_ij, z_ji] = Prox_lasso(a_ij, a_ji, eta, NID_diff) 
         
 #    elif(NID_diff > 1): # for lasso penality between node i with logdet and dummynode j:
-##        print 'we are in lasso penalty edge, alpha = ', entry[1].args[0].value
 #        ind = (a_ij > eta/2)
 #        z_ij[ind] = a_ij[ind]-eta/2
 #        ind = (a_ij < -eta/2)
@@ -1271,11 +1250,12 @@ def ADMM_z(entry, index_penalty = 1):
         writeValue(edge_z_vals, entry[Z_ZIJIND] + variables_i[0][3], z_ij, variables_i[0][2].size[0])
     if (NID_diff <= 1):
         writeValue(edge_z_vals, entry[Z_ZJIIND] + variables_j[0][3], z_ji, variables_j[0][2].size[0])
-
 #    -----------------------Proximal operator ---------------------------    
 #    print 'end of proximal operator'
 #    
-#    #----------------------- Use CVXPY  -----------------------------
+    #----------------------- Use CVXPY  -----------------------------
+#    objective = entry[Z_OBJ]
+#    constraints = entry[Z_CON]
 #    norms = 0    
 #    variables_i = entry[Z_IVARS]
 ##    print 'here 1'
@@ -1293,6 +1273,7 @@ def ADMM_z(entry, index_penalty = 1):
 #        u_ji = getValue(edge_u_vals, entry[Z_UJIIND] + offset, var.size[0])
 #        norms += square(norm(x_j - var + u_ji,'fro'))
 ##        norms += square(norm(x_j - var + u_ji))
+##    print 'here 2-1'
 #    objective = m_func(objective + (rho / 2) * norms)
 #    problem = Problem(objective, constraints)
 #    
@@ -1304,24 +1285,13 @@ def ADMM_z(entry, index_penalty = 1):
 #    if problem.status in [INFEASIBLE_INACCURATE, UNBOUNDED_INACCURATE]:
 #        print "ECOS error: using SCS for z update"
 #        problem.solve(solver=SCS)
-#    #----------------------- Use CVXPY  -----------------------------
-##    print 'here 4'
-##    i=0
-##    for v in objective.variables():
-##        print 'i = ',i
-##        print objective
-##        value = v.value
-##        print 'variable z_ij or z_ji = ', value.T
-##        if i == 0:
-##            print 'error = ', norm(value.T - z_ij,'fro')
-##        else:
-##            print 'error = ', norm(value.T - z_ji,'fro')            
-##        i = i+1
 #            
 #    # Write back result of z-update. Must write back for i- and j-node
 #    writeObjective(edge_z_vals, entry[Z_ZIJIND], objective, variables_i)
 #    writeObjective(edge_z_vals, entry[Z_ZJIIND], objective, variables_j)
-#    print 'here 5'
+    
+    #----------------------- Use CVXPY  -----------------------------
+
     return None
 
 # u-update for ADMM for one edge

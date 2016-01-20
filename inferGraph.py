@@ -985,9 +985,9 @@ def Prox_logdet(S, A, eta):
 #        print 'x_update = ',x_var
     return numpy.matrix(x_var).T
     
-def Prox_lasso(a_ij, a_ji, eta, NID_diff):  
-    z_ij = numpy.zeros(a_ij.shape)
-    z_ji = numpy.zeros(a_ij.shape)
+def Prox_lasso(a_ij, a_ji, eta, NID_diff):   
+    z_ij = numpy.copy(a_ij)
+    z_ji = numpy.copy(a_ji)
     
     k = 0
     ind = range(a_ij.shape[0])
@@ -1023,13 +1023,6 @@ def Prox_twonorm(A, eta):
     Z = numpy.dot(A, numpy.diag((numpy.ones(A.shape[0]) - eta/col_norms)*(col_norms > eta))) 
     return Z 
 
-def upper2Full(a):
-    n = (-1  + numpy.sqrt(1+ 8*a.shape[0]))/2  
-    A = numpy.zeros([n,n])
-    A[numpy.triu_indices(n)] = a 
-    temp = A.diagonal()
-    A = (A + A.T) - numpy.diag(temp)             
-    return A
 
 def Prox_penalty(a_ij, a_ji, eta, index_penalty):
     n = (-1  + numpy.sqrt(1+ 8*a_ij.shape[0]))/2      
@@ -1056,6 +1049,7 @@ def Prox_penalty(a_ij, a_ji, eta, index_penalty):
             z_ij = (numpy.squeeze(numpy.asarray(Z_ij[numpy.triu_indices(n)])))
             z_ji = (numpy.squeeze(numpy.asarray(Z_ji[numpy.triu_indices(n)])))
             return z_ij, z_ji
+#        e = (e + e.T)/2
         e = e[numpy.triu_indices(n)]  
     e = e/alpha
     z_ij = z_ij + e
@@ -1096,7 +1090,14 @@ def Prox_node_penalty(A_ij, A_ji, beta, MaxIter):
         
     return theta_1,theta_2
     
-    
+
+def upper2Full(a):
+    n = int((-1  + numpy.sqrt(1+ 8*a.shape[0]))/2)  
+    A = numpy.zeros([n,n])
+    A[numpy.triu_indices(n)] = a 
+    temp = A.diagonal()
+    A = (A + A.T) - numpy.diag(temp)             
+    return A   
     
 # x-update for ADMM for one node
 def ADMM_x(entry):
@@ -1221,6 +1222,7 @@ def ADMM_z(entry, index_penalty = 1):
     NID_diff  = entry[0][1]-entry[0][0]
 #    print 'entry[0] = ', entry[0], 'NID_diff = ' ,NID_diff 
 #    eta = 2*entry[1].args[0].value/rho
+#    print 'alpha/beta = ', entry[1].args[0].value 
     eta = entry[1].args[0].value/rho # where entry[1].args[0].value can be alpha or bete depending on NID_diff
 
     if (numpy.abs(NID_diff) <= 1): # for psi penalty edge
@@ -1230,22 +1232,7 @@ def ADMM_z(entry, index_penalty = 1):
     else: 
 #        print 'we are in lasso penalty edge, alpha = ', entry[1].args[0].value
         [z_ij, z_ji] = Prox_lasso(a_ij, a_ji, eta, NID_diff) 
-        
-#    elif(NID_diff > 1): # for lasso penality between node i with logdet and dummynode j:
-#        ind = (a_ij > eta/2)
-#        z_ij[ind] = a_ij[ind]-eta/2
-#        ind = (a_ij < -eta/2)
-#        z_ij[ind] = a_ij[ind] + eta/2
-##        print 'eta = ', eta, '\na_ij = ', a_ij, '\nz_ij = ', z_ij
-#    
-#    else: # for lasso penality between dummy node i and node j with logdet:
-#        ind = (a_ji > eta/2)        
-#        z_ji[ind] = a_ji[ind]-eta/2
-#        ind = (a_ji < -eta/2)
-#        z_ji[ind] = a_ji[ind] + eta/2
-#    print 'z_ij = ', z_ij#, '\nz_ji = ', z_ji
-#    solution_i = numpy.matrix(z_ij).T
-#    solution_j = numpy.matrix(z_ji).T
+
     if (NID_diff >= -1):
         writeValue(edge_z_vals, entry[Z_ZIJIND] + variables_i[0][3], z_ij, variables_i[0][2].size[0])
     if (NID_diff <= 1):
@@ -1285,11 +1272,18 @@ def ADMM_z(entry, index_penalty = 1):
 #    if problem.status in [INFEASIBLE_INACCURATE, UNBOUNDED_INACCURATE]:
 #        print "ECOS error: using SCS for z update"
 #        problem.solve(solver=SCS)
-#            
+#    
+#    jj = 0
+#    for v in objective.variables():
+#        jj = jj + 1        
+#        value = v.value
+#        print 
+##        print 'jj = ', jj,'value.shape = ', value.shape        
+#
 #    # Write back result of z-update. Must write back for i- and j-node
 #    writeObjective(edge_z_vals, entry[Z_ZIJIND], objective, variables_i)
 #    writeObjective(edge_z_vals, entry[Z_ZJIIND], objective, variables_j)
-    
+#    
     #----------------------- Use CVXPY  -----------------------------
 
     return None

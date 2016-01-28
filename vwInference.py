@@ -19,8 +19,10 @@ eps = 1e-2 #Treat these as essentially 0
 
 
 #Read in file
+system = 0 #MadMax
 filename = "/dfs/scratch0/abhisg/granular_analysis/new_data/0/2014-03-10/snapshots_0_2014-03-10_0_4.dat"
 if (sys.platform == 'darwin'):
+	system = 1 #Mac
 	filename = "/Users/Hallac/Desktop/vw_data.dat"
 
 for line in open(filename, 'r'):
@@ -43,8 +45,10 @@ with open(filename,'r') as f:
 		for line in sample:
 			temp = line.rstrip().split('\t')
 			#Steer_Angle, Velocity, Heading, Steer_Velocity, Brake, Pedal, X_Accel, Y_Accel, RPM
-			#region = [temp[1], temp[2], temp[3], temp[12], temp[13],temp[14],temp[16],temp[17],temp[19]]
-			region = [temp[2], temp[3], temp[4], temp[13], temp[14],temp[15],temp[17],temp[18],temp[20]]
+			if(system == 1):
+				region = [temp[1], temp[2], temp[3], temp[12], temp[13],temp[14],temp[16],temp[17],temp[19]]
+			else:
+				region = [temp[2], temp[3], temp[4], temp[13], temp[14],temp[15],temp[17],temp[18],temp[20]]
 			readings[counter,:] = region
 			counter = counter+1
 

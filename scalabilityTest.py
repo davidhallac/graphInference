@@ -9,7 +9,7 @@ import matplotlib.pylab as pl
 import time
 # for size 10, alph = 0.1 beta = 0.6
 # Problem parameters
-size = 100   
+size = 50
 timesteps = 100# size/2
 samplesPerStep = 10#int(np.log2(size))
 timeShift = timesteps/3 #Number of steps till new covariance matrix appears
@@ -123,7 +123,7 @@ for i in range(timesteps):
 
 print "Starting to solve:"
 t = time.time()
-gvx.Solve(Verbose=True)
+gvx.Solve(Rho = 10, Verbose=True)
 #gvx.Solve( NumProcessors = 1, MaxIters = 3)
 end = time.time() - t
 print "SOLUTION TIME", end

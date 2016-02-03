@@ -9,8 +9,8 @@ import matplotlib.pylab as pl
 import time
 # for size 10, alph = 0.1 beta = 0.6
 # Problem parameters
-size = 200
-timesteps = 100# size/2
+size = 100
+timesteps = 200# size/2
 samplesPerStep = 10#int(np.log2(size))
 timeShift = timesteps/3 #Number of steps till new covariance matrix appears
 eps = 1e-3

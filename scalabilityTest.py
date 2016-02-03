@@ -123,7 +123,7 @@ for i in range(timesteps):
 
 print "Starting to solve:"
 t = time.time()
-gvx.Solve(Rho = 10, Verbose=True)
+gvx.Solve(Rho = 2, Verbose=True)
 #gvx.Solve( NumProcessors = 1, MaxIters = 3)
 end = time.time() - t
 print "SOLUTION TIME", end

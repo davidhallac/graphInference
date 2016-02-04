@@ -9,7 +9,7 @@ import matplotlib.pylab as pl
 import time
 # for size 10, alph = 0.1 beta = 0.6
 # Problem parameters
-size = 400
+size = 600
 timesteps = 50# size/2
 samplesPerStep = 10#int(np.log2(size))
 timeShift = timesteps/3 #Number of steps till new covariance matrix appears

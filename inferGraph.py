@@ -1190,7 +1190,7 @@ def ADMM_z(entry, index_penalty = 1):
     
     #Select this parameter to determine which edge penalty to use:
     #1: L1-norm, 2: L2-norm, 3: Laplacian, 4: Perturbed-node, 5: L-inf norm
-    index_penalty = 2
+    index_penalty = 1
     
     #-----------------------Proximal operator ---------------------------
     a_ij = [] # 

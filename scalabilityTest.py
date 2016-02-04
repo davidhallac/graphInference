@@ -123,8 +123,8 @@ for i in range(timesteps):
 
 print "Starting to solve:"
 t = time.time()
-#gvx.Solve(Rho = 0.5, Verbose=True)
-gvx.Solve( UseADMM = False)
+gvx.Solve(Rho = 0.5, Verbose=True)
+#gvx.Solve( UseADMM = False)
 end = time.time() - t
 print "SOLUTION TIME", end
 # t = time.time()

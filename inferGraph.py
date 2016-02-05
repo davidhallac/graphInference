@@ -164,7 +164,7 @@ class TGraphVX(TUNGraph):
         objective = m_func(objective)
         problem = Problem(objective, constraints)
         try:
-            problem.solve()
+            problem.solve(verbose=True)
         except SolverError:
             problem.solve(solver=SCS)
         if problem.status in [INFEASIBLE_INACCURATE, UNBOUNDED_INACCURATE]:

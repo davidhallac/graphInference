@@ -14,7 +14,7 @@ sizeList = [707,800,900]#[2,3,4,5,6,7,8,9,10,50,100,200,300,500,707]
 timeList = [10]
 useCVX = False
 
-#np.random.seed(0)
+np.random.seed(0)
 timingVals = np.zeros([__builtin__.len(sizeList), __builtin__.len(timeList)])
 for sizeTemp in range(__builtin__.len(sizeList)):
     for timeTemp in range(__builtin__.len(timeList)):

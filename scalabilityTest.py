@@ -10,7 +10,7 @@ import time
 # for size 10, alph = 0.1 beta = 0.6
 # Problem parameters
 size = 10
-timesteps = 2# size/2
+timesteps = 5# size/2
 useCVX = True
 
 samplesPerStep = 10#int(np.log2(size))

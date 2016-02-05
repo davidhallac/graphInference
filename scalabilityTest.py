@@ -12,8 +12,10 @@ import time
 
 sizeList = [7]#[10,100,250,500,700]
 timeList = [10]
-timingVals = np.zeros([__builtin__.len(sizeList), __builtin__.len(timeList)])
+useCVX = False
 
+
+timingVals = np.zeros([__builtin__.len(sizeList), __builtin__.len(timeList)])
 for sizeTemp in range(__builtin__.len(sizeList)):
     for timeTemp in range(__builtin__.len(timeList)):
 
@@ -23,7 +25,6 @@ for sizeTemp in range(__builtin__.len(sizeList)):
 # timesteps = 10# size/2
         size = sizeList[sizeTemp]
         timesteps = timeList[timeTemp]
-        useCVX = False
         print "Solving for size", size, ", timesteps ", timesteps
 
         samplesPerStep = 10#int(np.log2(size))
@@ -43,6 +44,7 @@ for sizeTemp in range(__builtin__.len(sizeList)):
         np.set_printoptions(suppress=True, precision = 3, threshold = 5)
         S_true = np.zeros((size,size))
         while (alg.det(S_true) <= 1e-2 ):
+            print alg.det(S_true)
             #print int(numpy.log2(size))*size
             G6 = GenRndGnm(PUNGraph, size, int((size**2)*0.05))
             #G6 = snap.GenRndGnm(snap.PUNGraph, 5, 5)
@@ -58,6 +60,7 @@ for sizeTemp in range(__builtin__.len(sizeList)):
         #    print alg.det(S_true)
         Cov = alg.inv(S_true)
         S_true2 = numpy.zeros((size,size))
+        print "Step 2"
         while (alg.det(S_true2) <= 1e-2 ):
             #print int(numpy.log2(size))*size
             G6 = GenRndGnm(PUNGraph, size, int((size**2)*0.05))

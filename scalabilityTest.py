@@ -10,9 +10,9 @@ import matplotlib.pylab as pl
 import time
 # for size 10, alph = 0.1 beta = 0.6
 
-sizeList = [7]#[10,100,250,500,700]
+sizeList = [2,3,4,5,6,7]#[10,100,250,500,700]
 timeList = [10]
-useCVX = False
+useCVX = True
 
 
 timingVals = np.zeros([__builtin__.len(sizeList), __builtin__.len(timeList)])
@@ -44,7 +44,6 @@ for sizeTemp in range(__builtin__.len(sizeList)):
         np.set_printoptions(suppress=True, precision = 3, threshold = 5)
         S_true = np.zeros((size,size))
         while (alg.det(S_true) <= 1e-2 ):
-            print alg.det(S_true), S_true
             #print int(numpy.log2(size))*size
             G6 = GenRndGnm(PUNGraph, size, int((size**2)*0.05))
             #G6 = snap.GenRndGnm(snap.PUNGraph, 5, 5)
@@ -55,12 +54,15 @@ for sizeTemp in range(__builtin__.len(sizeList)):
         #        print "edge (%d, %d)" % (EI.GetSrcNId(), EI.GetDstNId())
             #print S, S.max(axis = 1)
             #S =  S + S.T + np.diag( S.max(axis = 1) )#S.max()*numpy.matrix(numpy.eye(size))
-            S_true =  S_true + S_true.T + S_true.max()*np.matrix(np.eye(size))
+            if(size < 10):
+                #So we get positive definite matrices, since S_true.max is often 0
+                S_true =  S_true + S_true.T + size*0.2*np.matrix(np.eye(size))
+            else:
+                S_true =  S_true + S_true.T + S_true.max()*np.matrix(np.eye(size))
         #    print S_true
         #    print alg.det(S_true)
         Cov = alg.inv(S_true)
         S_true2 = numpy.zeros((size,size))
-        print "Step 2"
         while (alg.det(S_true2) <= 1e-2 ):
             #print int(numpy.log2(size))*size
             G6 = GenRndGnm(PUNGraph, size, int((size**2)*0.05))
@@ -72,7 +74,10 @@ for sizeTemp in range(__builtin__.len(sizeList)):
         #        print "edge (%d, %d)" % (EI.GetSrcNId(), EI.GetDstNId())
             #print S, S.max(axis = 1)
             #S =  S + S.T + np.diag( S.max(axis = 1) )#S.max()*numpy.matrix(numpy.eye(size))
-            S_true2 =  S_true2 + S_true2.T + S_true2.max()*np.matrix(np.eye(size))
+            if(size < 10):
+                S_true2 =  S_true2 + S_true2.T + size*0.2*np.matrix(np.eye(size))
+            else:
+                S_true2 =  S_true2 + S_true2.T + S_true2.max()*np.matrix(np.eye(size))
         #    print S
         #    print alg.det(S_true2)
         Cov2 = alg.inv(S_true2)
@@ -88,7 +93,10 @@ for sizeTemp in range(__builtin__.len(sizeList)):
         #        print "edge (%d, %d)" % (EI.GetSrcNId(), EI.GetDstNId())
             #print S, S.max(axis = 1)
             #S =  S + S.T + np.diag( S.max(axis = 1) )#S.max()*numpy.matrix(numpy.eye(size))
-            S_true3 =  S_true3 + S_true3.T + S_true3.max()*np.matrix(np.eye(size))
+            if(size < 10):
+                S_true3 =  S_true3 + S_true3.T + size*0.2*np.matrix(np.eye(size))
+            else:            
+                S_true3 =  S_true3 + S_true3.T + S_true3.max()*np.matrix(np.eye(size))
         #    print S
         #    print alg.det(S_true2)
         Cov3 = alg.inv(S_true3)

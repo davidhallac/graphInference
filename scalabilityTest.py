@@ -2,6 +2,7 @@ from inferGraph import *
 import numpy as np
 import numpy.linalg as alg
 import scipy as spy
+import __builtin__
 
 #import matplotlib.pyplot as plt
 import matplotlib.pylab as pl

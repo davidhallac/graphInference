@@ -10,8 +10,8 @@ import matplotlib.pylab as pl
 import time
 # for size 10, alph = 0.1 beta = 0.6
 
-sizeList = [10,100,250,500,700]
-timeList = [10,20]
+sizeList = [10,100,250]
+timeList = [10,20,50,100,150,200]
 timingVals = np.zeros([__builtin__.len(sizeList), __builtin__.len(timeList)])
 
 for sizeTemp in range(__builtin__.len(sizeList)):

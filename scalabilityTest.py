@@ -11,6 +11,8 @@ import time
 # Problem parameters
 size = 5
 timesteps = 5# size/2
+useCVX = False
+
 samplesPerStep = 10#int(np.log2(size))
 timeShift = timesteps/3 #Number of steps till new covariance matrix appears
 eps = 1e-3
@@ -123,102 +125,15 @@ for i in range(timesteps):
 
 print "Starting to solve:"
 t = time.time()
-#gvx.Solve(Rho = 0.5, Verbose=True)
-gvx.Solve( UseADMM = False)
+if(useCVX):
+    gvx.Solve( UseADMM = False)
+else:
+    gvx.Solve(Rho = 0.5, Verbose=True)
+
 end = time.time() - t
 print "SOLUTION TIME", end
-# t = time.time()
-#gvx.Solve(UseADMM=False)
-# end2 = time.time() - t
-# print "TIMES", end, end2
-
-#Plot results
-# fig = pl.figure()
-# ax1 = fig.add_subplot(2,1,1)
-# ax2 = fig.add_subplot(2,1,2)
-# ims = []
 
 
-# e1 = 0
-# e2 = 0
-# e1_set = []
-# e2_set = []
-# for nodeID in range(timesteps):
-#     val = gvx.GetNodeValue(nodeID,'S')
-#     S_est = np.zeros((size,size))
-#     S_est[np.triu_indices(size)] = val #S_est matrix convert semidefinite (n(n-1) entries) to a full semidefinite matrix
-#     temp = S_est.diagonal()
-#     ind = (S_est<eps)&(S_est>-eps)
-#     S_est[ind]=0
-#     S_est = np.asarray((S_est + S_est.T) - np.diag(temp))
-        
-#     #Get actual InvCov
-#     S_actual = 0
-#     if (nodeID < timeShift):
-#         S_actual = np.asarray(S_true.copy())
-#     elif (nodeID < 2*timeShift):
-#         S_actual = np.asarray(S_true2.copy())
-#     else:
-#         S_actual = np.asarray(S_true3.copy())
-        
-#     D = np.where(S_est != 0)[0].shape[0]#len(numpy.where(S_est == 0)[0])
-#     T = np.where(S_actual != 0)[0].shape[0]
-#     TandD = float(np.where(np.logical_and(S_actual,S_est) == True)[0].shape[0])
-#     P = TandD/D
-#     R = TandD/T
-# #    print 'D = ', D, 'T = ',T, 'TandD = ',TandD, 'P = ',P, 'R = ', R, (2* P*R/(P+R))
-# #    print 'S_actual = ', S_actual
-# #    print '\nS_est = ', S_est
-# #    print numpy.where(numpy.logical_and(S_actual,S_est) == True)[0].shape[0]
-# #    e1 = e1 + np.linalg.norm(S_actual - np.matrix(S_est), 'fro')
-# #    e2 = e2 + 2* P*R/(P+R)
-#     e1 = alg.norm(S_actual - np.matrix(S_est), 'fro')
-#     e2 = 2* P*R/(P+R)
-#     e1_set.append(e1)
-#     e2_set.append(e2)
-# pl.figure(1)
-# pl.subplot(311)
-# pl.plot(range(timesteps), e1_set)
-# pl.subplot(312)
-# pl.plot(range(timesteps), e2_set)
-# pl.show()
 
-#        FroError.append(e1)
-#        Score.append(e2)
-#        pl.plot(FroError)
-#        pl.plot(Score)
-#index1 = np.argmin(FroError)
-#index2 = np.argmax(Score)
-#index11 = index1/set_length
-#index12 = index1 - (index11)*set_length
-#index21 = index2/set_length
-#index22 = index2 - (index21)*set_length
-#print index1, index11, index12, index2, index21, index22
-#print 'alpha = ', alpha_set[index11], ' beta = ', beta_set[index12], ' FroError = ', FroError[index1]
-#print '\nalpha = ', alpha_set[index21], ' beta = ', beta_set[index22], ' Score = ', Score[index2]
-#Fro_error = numpy.reshape(FroError,(set_length, set_length))
-#Score = numpy.reshape(Score,(set_length, set_length))
-#Y, X =  numpy.meshgrid(alpha_set, beta_set)
-#fig1 = pl.contourf(X, Y, Score)
-#pl.ylabel(r'$\alpha$')
-#pl.xlabel(r'$\beta$')
-#pl.colorbar()
-#pl.title('Score')
-#pl.savefig('fig1')
-#pl.close()
-#fig2 = pl.contourf(X, Y, Fro_error)
-#pl.ylabel(r'$\alpha$')
-#pl.xlabel(r'$\beta$')
-#pl.title('frobenious error')
-#pl.colorbar()
-#pl.savefig('fig2')
-#pl.close()
-#pl.show()
-#        #pl.figure(1)
-#        #pl.subplot(311)
-#        #pl.plot(range(timesteps), FroError)
-#        #pl.subplot(312)
-#        #pl.plot(range(timesteps), Score)
-#        #pl.show()
-#np.savez('error', size = size, timesteps = timesteps, alpha_set = alpha_set, beta_set = beta_set, S_true = S_true, S_true2 = S_true2, Fro_error = Fro_error, Score = Score )
-#np.savez('alpha_beta', size = size, timesteps = timesteps, alpha_fro = alpha_set[index11], beta_fro = beta_set[index11], alpha_score = alpha_set[index21], beta_score = beta_set[index22])
+
+

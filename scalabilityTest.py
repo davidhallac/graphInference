@@ -10,7 +10,7 @@ import matplotlib.pylab as pl
 import time
 # for size 10, alph = 0.1 beta = 0.6
 
-sizeList = [40]#[2,3,4,5,6,7,8,9,10,50,100,200,300,500,707]
+sizeList = [800]#[2,3,4,5,6,7,8,9,10,50,100,200,300,500,707]
 timeList = [10]
 useCVX = False
 
@@ -58,7 +58,7 @@ for sizeTemp in range(__builtin__.len(sizeList)):
                 #So we get positive definite matrices, since S_true.max is often 0
                 S_true =  S_true + S_true.T + size*0.2*np.matrix(np.eye(size))
             else:
-                S_true =  S_true + S_true.T + S_true.max()*np.matrix(np.eye(size))
+                S_true =  S_true + S_true.T + 2*S_true.max()*np.matrix(np.eye(size))
         #    print S_true
         #    print alg.det(S_true)
         Cov = alg.inv(S_true)

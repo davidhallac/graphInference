@@ -10,7 +10,7 @@ import matplotlib.pylab as pl
 import time
 # for size 10, alph = 0.1 beta = 0.6
 
-sizeList = [800]#[2,3,4,5,6,7,8,9,10,50,100,200,300,500,707]
+sizeList = [40]#[2,3,4,5,6,7,8,9,10,50,100,200,300,500,707]
 timeList = [10]
 useCVX = False
 

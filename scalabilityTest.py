@@ -10,11 +10,11 @@ import matplotlib.pylab as pl
 import time
 # for size 10, alph = 0.1 beta = 0.6
 
-sizeList = [8,9,10]#[2,3,4,5,6,7]#[10,100,250,500,700]
+sizeList = [2,3,4,5,6,7,8,9,10,20,30,50,100,200,300,500,707]#[10,100,250,500,700]
 timeList = [10]
-useCVX = True
+useCVX = False
 
-
+#np.random.seed(0)
 timingVals = np.zeros([__builtin__.len(sizeList), __builtin__.len(timeList)])
 for sizeTemp in range(__builtin__.len(sizeList)):
     for timeTemp in range(__builtin__.len(timeList)):
@@ -148,5 +148,14 @@ for sizeTemp in range(__builtin__.len(sizeList)):
 
 print timingVals
 
+for nodeID in range(timesteps):
+    val = gvx.GetNodeValue(nodeID,'S')
+    S_est = np.zeros((size,size))
+    S_est[np.triu_indices(size)] = val #S_est matrix convert semidefinite (n(n-1) entries) to a full semidefinite matrix
+    temp = S_est.diagonal()
+    ind = (S_est<eps)&(S_est>-eps)
+    S_est[ind]=0
+    S_est = np.asarray((S_est + S_est.T) - np.diag(temp))
+#    print S_est
 
 

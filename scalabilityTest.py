@@ -10,7 +10,7 @@ import time
 # for size 10, alph = 0.1 beta = 0.6
 # Problem parameters
 size = 5
-timesteps = 5# size/2
+timesteps = 2# size/2
 useCVX = False
 
 samplesPerStep = 10#int(np.log2(size))
@@ -26,6 +26,7 @@ beta = 0.6 # Weight between basis nodes
 FroError = []
 Score = []
 
+print "TEST1"
 # Generate sparse, random, inverse covariance matrix (inverse of inverseCov is original covariance matrix)
 
 np.set_printoptions(suppress=True, precision = 3, threshold = 5)
@@ -77,19 +78,8 @@ while (alg.det(S_true3) <= 1e-2 ):
 #    print S
 #    print alg.det(S_true2)
 Cov3 = alg.inv(S_true3)
-#np.random.seed(1)
-#ind_zero = spy.sparse.rand(size,size,0.25).todense()
-#S_true = (ind_zero + ind_zero.T)/2 + ind_zero.max()*np.matrix(np.eye(size))
-#Cov = alg.inv(S_true) # Covariance matrix #1
-#
-#ind_zero2 = spy.sparse.rand(size,size,0.25).todense()
-#S_true2 = (ind_zero2 + ind_zero2.T)/2 + ind_zero2.max()*np.matrix(np.eye(size))
-#Cov2 = alg.inv(S_true2) # second covariance matrix
+print "TEST2"
 
-#
-#for alpha in alpha_set:
-#    for beta in beta_set:
-#        print alpha, beta
 gvx = TGraphVX()
 for i in range(timesteps):
 	# Generate random samples

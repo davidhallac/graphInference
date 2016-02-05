@@ -9,7 +9,7 @@ import matplotlib.pylab as pl
 import time
 # for size 10, alph = 0.1 beta = 0.6
 # Problem parameters
-size = 200
+size = 100
 timesteps = 150# size/2
 useCVX = False
 
@@ -26,9 +26,7 @@ beta = 0.6 # Weight between basis nodes
 FroError = []
 Score = []
 
-print "TEST1"
 # Generate sparse, random, inverse covariance matrix (inverse of inverseCov is original covariance matrix)
-
 np.set_printoptions(suppress=True, precision = 3, threshold = 5)
 S_true = np.zeros((size,size))
 while (alg.det(S_true) <= 1e-2 ):
@@ -47,7 +45,6 @@ while (alg.det(S_true) <= 1e-2 ):
 #    print alg.det(S_true)
 Cov = alg.inv(S_true)
 S_true2 = numpy.zeros((size,size))
-print "TEST2"
 while (alg.det(S_true2) <= 1e-2 ):
     #print int(numpy.log2(size))*size
     G6 = GenRndGnm(PUNGraph, size, int((size**2)*0.05))
@@ -64,7 +61,6 @@ while (alg.det(S_true2) <= 1e-2 ):
 #    print alg.det(S_true2)
 Cov2 = alg.inv(S_true2)
 S_true3 = numpy.zeros((size,size))
-print "TEST3"
 while (alg.det(S_true3) <= 1e-2 ):
     #print int(numpy.log2(size))*size
     G6 = GenRndGnm(PUNGraph, size, int((size**2)*0.05))
@@ -80,7 +76,6 @@ while (alg.det(S_true3) <= 1e-2 ):
 #    print S
 #    print alg.det(S_true2)
 Cov3 = alg.inv(S_true3)
-print "TEST4"
 
 gvx = TGraphVX()
 for i in range(timesteps):

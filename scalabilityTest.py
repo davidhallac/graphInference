@@ -24,6 +24,7 @@ for sizeTemp in range(__builtin__.len(sizeList)):
         size = sizeList[sizeTemp]
         timesteps = timeList[timeTemp]
         useCVX = False
+        print "Solving for size", size, ", timesteps ", timesteps
 
         samplesPerStep = 10#int(np.log2(size))
         timeShift = timesteps/3 #Number of steps till new covariance matrix appears

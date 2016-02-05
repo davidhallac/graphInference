@@ -11,7 +11,7 @@ import time
 # Problem parameters
 size = 10
 timesteps = 2# size/2
-useCVX = False
+useCVX = True
 
 samplesPerStep = 10#int(np.log2(size))
 timeShift = timesteps/3 #Number of steps till new covariance matrix appears

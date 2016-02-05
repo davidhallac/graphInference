@@ -11,10 +11,10 @@ import time
 
 sizeList = [10,20,30]
 timeList = [10,20]
-timingVals = np.zeros(len(sizeList), len(timeList))
+timingVals = np.zeros(__builtin__.len(sizeList), __builtin__.len(timeList))
 
-for sizeTemp in range(len(sizeList)):
-    for timeTemp in range(len(timeList)):
+for sizeTemp in range(__builtin__.len(sizeList)):
+    for timeTemp in range(__builtin__.len(timeList)):
 
 
 # Problem parameters

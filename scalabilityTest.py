@@ -9,8 +9,8 @@ import matplotlib.pylab as pl
 import time
 # for size 10, alph = 0.1 beta = 0.6
 # Problem parameters
-size = 100
-timesteps = 150# size/2
+size = 500
+timesteps = 10# size/2
 useCVX = False
 
 samplesPerStep = 10#int(np.log2(size))

@@ -10,7 +10,7 @@ import numpy.linalg as alg
 import scipy as spy
 
 import matplotlib as mpl
-mpl.use('Agg')
+#mpl.use('Agg')
 import matplotlib.pylab as pl
 #import matplotlib.animation as an
 import time
@@ -22,30 +22,52 @@ samplesPerStep = 10#int(np.log2(size))
 numberOfCov = 2
 timeShift = int(np.ceil(float(timesteps)/numberOfCov)) #Number of steps till new covariance matrix appears
 eps = 3e-3
-
+eps_abs = 1e-2
+eps_rel = 1e-2
 
 # Choose a penalty function
 # 1: l1, 2: l2, 3: laplacian, 4: l-inf, 5: perturbation node penalty
-index_penalty = 3  
+index_penalty = 5
 
 
 # Covariance matrix parameters
 #cov_mode = 'Syn'
 #cov_mode_number = 5 # 1,2,4: normal cov, 3: cov for laplacian, 5: perturbation 
-
-low = 0.3
-upper = 0.6
-
+#low = 0.3
+#upper = 0.6
+# 289 SW airline 
 cov_mode = 'Stock'
+if cov_mode == 'Stock':
+#    stock_list = [2,321,30, 241, 477, 180]#[2,321,30, 241, 318, 372]# 477,180 #[2,321,30, 241, 333, 178]: another perturbed 
+    stock_list = range(524)
+    #[2,321,30, 241, 371, 84] #[2,321,30, 241, 516,126]#[2,321,207, 241, 516,126]
+    print 'stock_list = ', stock_list
+
 #time1 = [82, 102] #December 28th - Jan 27
-time1 = [82, 102] #December 28th - Jan 27
-time2 = [103, 108]# 123] #Jan 28 - Feb 26
-#time1 = [82, 102] #December 28th - Jan 27
-time_set = []
-time_set.append(time1)
-time_set.append(time2)
-stock_list = [2,321,207, 241, 516,126]
-print 'stock_list = ', stock_list
+###time2 = [103,  123] #Jan 28 - Feb 26
+#time_set = []
+#time_set.append(time1)
+#time_set.append(time2)
+def timing_set(center, samplesPerStep_left, count_left, samplesPerStep_right, count_right ):
+    time_set = []
+    count_left = min(count_left, center/samplesPerStep_left)
+    print 'left timesteps: = ', count_left
+    start = max(center- samplesPerStep_left*(count_left), 0)
+    for i in range(count_left):
+        time_interval = [start, start + samplesPerStep_left -1]
+        time_set.append(time_interval)
+        start = start + samplesPerStep_left
+    count_right = min(count_right, 245/samplesPerStep_left)
+    print 'right timesteps: = ', count_right
+    for i in range(count_right):
+        time_interval = [start, start + samplesPerStep_right -1]
+        time_set.append(time_interval)
+        start = start + samplesPerStep_right
+    return time_set
+
+#time_set = timing_set(103,20,1, 6, 1)
+time_set = timing_set(101, 5 , 4 , 5, 4)
+
 
 # Kernel parameters
 #use_kernel = True
@@ -53,20 +75,20 @@ sigma = 1
 kernel_width = 20
 use_kernel = False
 
-
-
-
+c = 1.5
 set_length = 1
 compare = False
-comp_with = 'kernel method'
 comp_with = 'zeroBeta GL'
 if set_length == 1:
-    alpha_set = [0.25]
+    alpha_set = [0.17]
+#    alpha_set = [0.27]
     if use_kernel == False:
-        beta_set = [1.5]
+        beta_set = [2.0]
+#        beta_set = [12.0]
+#        beta_set = [1.5]
     else:
         print 'kernel = ', use_kernel, 'beta is kernel width'
-        beta_set  = [20.0] # kernel_width
+        beta_set  = [7.0] # kernel_width
 else:
     compare = False
     alpha_set = np.linspace(0, 3, set_length)
@@ -179,8 +201,18 @@ def genMulCov(size, numberOfCov, low, upper, mode, portion = 0.05):
         if mode == 5:
             S_set[k] = S_set[k] + (0.1 - min(minEVal_set))*np.identity(size)
         Cov_set.append(alg.inv(S_set[k]))
-    return S_set, Cov_set        
-
+    return S_set, Cov_set   
+     
+def genEmpCov(samples, useKnownMean = False, m = 0):
+    size, samplesPerStep = samples.shape
+    if useKnownMean == False:
+        m = np.mean(samples, axis = 1)
+    empCov = 0
+    for i in range(samplesPerStep):
+        sample = samples[:,i]
+        empCov = np.outer(sample - m, sample -m)
+    return empCov
+    
 def getStocks(time_set, stock_list, data):
     timesteps = time_set.__len__()
     sample_set = []
@@ -188,13 +220,13 @@ def getStocks(time_set, stock_list, data):
     stock_data = np.genfromtxt('finance.csv', delimiter=',')
 #    print stock_data
     size = stock_list.__len__()
-    
+#    print 'timesteps = ',timestpes
     for i in range(timesteps):
         time_interval = time_set[i] 
 #        print time_interval
         sample_data = stock_data[time_interval[0]:time_interval[1], stock_list].T
         sample_data_set = sample_set.append(sample_data)
-        empCov_set.append(np.cov(sample_data))
+        empCov_set.append(genEmpCov(sample_data))
     return size, timesteps, sample_data_set, empCov_set
     
 
@@ -252,7 +284,7 @@ def genEmpCov_kernel(sigma, width, sample_set, knownMean = True):
     S = S/K_sum
     return S
 
-def solveProblem(gvx, index_penalty, cov_mode, alpha, beta, timesteps, timeShift, Cov_set, use_kernel, sigma, sample_set, empCov_set):
+def solveProblem(gvx, index_penalty, cov_mode, alpha, beta, timesteps, timeShift, Cov_set, use_kernel, sigma, sample_set, empCov_set, eps_abs = 1e-4, eps_rel = 1e-4):
     if use_kernel:
         empCov_set = []
     for i in range(timesteps):
@@ -268,7 +300,7 @@ def solveProblem(gvx, index_penalty, cov_mode, alpha, beta, timesteps, timeShift
                 kernel_width = beta
                 empCov = genEmpCov_kernel(sigma, kernel_width, sample_set)
             else:
-                empCov = np.cov(x_samples)
+                empCov = genEmpCov(x_samples)
             empCov_set.append(np.asarray(empCov))
         else: 
             # Just use passed sample_set and empirical covariance set
@@ -310,7 +342,12 @@ def solveProblem(gvx, index_penalty, cov_mode, alpha, beta, timesteps, timeShift
     
     t = time.time()
     #        gvx.Solve()
-    gvx.Solve( EpsAbs=0.001, EpsRel=0.001)
+#    print eps_abs, eps_rel
+#    for t2 in gvx.Nodes():
+#        print t2.GetObjective()
+#        print t2.GetConstraints()
+#        print "HI"
+    gvx.Solve(EpsAbs=eps_abs, EpsRel=eps_rel)
     #        gvx.Solve( MaxIters = 100)
     #gvx.Solve( NumProcessors = 1, MaxIters = 3)
     end = time.time() - t
@@ -324,14 +361,22 @@ def genGraph(S_actual, S_est, S_previous, empCov_set, nodeID, e1, e2, e3, e4, di
     TandD = float(np.where(np.logical_and(S_actual,S_est) == True)[0].shape[0])
     P = TandD/D
     R = TandD/T
-    K = float(np.where(np.logical_and((S_est>0) != (S_previous>0), S_est>0) == True)[0].shape[0])
-    
-#            print 'TandD = ',TandD, 'T = ', T, 'D=', D, 'K = ', K
-#            K = float(np.where(np.logical_and(S_est, S_previous) == True)[0].shape[0])
     offDiagDiff = S_actual - S_est
     offDiagDiff = offDiagDiff - np.diag(np.diag(offDiagDiff))
-    e1.append( alg.norm(offDiagDiff, 'fro'))
+    S_diff = (S_est - S_previous)  
+    S_diff = S_diff - np.diag(np.diag(S_diff))
+    ind = (S_diff < 1e-2) & (S_diff > - 1e-2)
+    S_diff[ind] = 0    
+    K = np.count_nonzero(S_diff)
+#    K = np.where(S_diff !=0)[0].shape[0]
+#            print 'TandD = ',TandD, 'T = ', T, 'D=', D, 'K = ', K
+#            K = float(np.where(np.logical_and(S_est, S_previous) == True)[0].shape[0])
+    e1.append(-np.log(alg.det(S_est)) + np.trace(np.dot(S_est, empCov_set[nodeID])) + K)
+#    e1.append( alg.norm(offDiagDiff, 'fro'))
     e2.append(2* P*R/(P+R))
+    
+    
+    K = float(np.where(np.logical_and((S_est>0) != (S_previous>0), S_est>0) == True)[0].shape[0])
     e3.append(-np.log(alg.det(S_est)) + np.trace(np.dot(S_est, empCov_set[nodeID])) + K)
     e4.append(alg.norm(S_est -  S_previous, 'fro'))
     
@@ -344,7 +389,7 @@ def genGraph(S_actual, S_est, S_previous, empCov_set, nodeID, e1, e2, e3, e4, di
             print 'D = ',D,'T = ', T,'TandD = ', TandD,'K = ', K,'P = ', P,'R = ', R,'Score = ', 2* P*R/(P+R)
             
     return e1, e2, e3, e4
- 
+#--------------------------------------------- End Defining functions -------------------------------------- 
 
 
 # Generate sparse, random, inverse covariance matrix (inverse of inverseCov is original covariance matrix)
@@ -425,15 +470,14 @@ for alpha in alpha_set:
             sample_set_naive = []
             # do nothing
         
-            
-        gvx, empCov_set = solveProblem(gvx, index_penalty, cov_mode, alpha, beta, timesteps, timeShift, Cov_set, use_kernel, sigma, sample_set, empCov_set)
+        gvx, empCov_set = solveProblem(gvx, index_penalty, cov_mode, alpha, beta, timesteps, timeShift, Cov_set, use_kernel, sigma, sample_set, empCov_set, eps_abs, eps_rel)
         
         if set_length == 1 and compare == True:
             # naive 1: use_kernel = True
 #            beta_kernel =  beta
 #            gvx_naive, empCov_set_naive = solveProblem(gvx_naive, index_penalty, alpha, beta, timesteps, timeShift, Cov_set, True, sigma, empCov_set_naive) 
             # naive 2: beta = 0
-            gvx_naive, empCov_set_naive = solveProblem(gvx_naive, index_penalty, cov_mode, alpha, 0, timesteps, timeShift, Cov_set, use_kernel, sigma,sample_set_naive, empCov_set_naive) 
+            gvx_naive, empCov_set_naive = solveProblem(gvx_naive, index_penalty, cov_mode, alpha, 0, timesteps, timeShift, Cov_set, use_kernel, sigma,sample_set_naive, empCov_set_naive,eps_abs, eps_rel) 
         e1 = []
         e2 = []
         e3 = []
@@ -443,7 +487,6 @@ for alpha in alpha_set:
         for nodeID in range(timesteps):
             val = gvx.GetNodeValue(nodeID,'S')
             S_est = upper2Full(val, eps)
-            print 'At node = ', nodeID, 'S_est=\n', S_est
             if nodeID == 0:
                 S_previous = S_est
             if cov_mode == 'Syn':
@@ -453,9 +496,15 @@ for alpha in alpha_set:
     #            print 'S_actual=', S_actual
             else:
                 S_actual = np.identity(size)
+#                print '\nAt node = ', nodeID, '-----------------\nEmpCov = \n', empCov_set[nodeID], '\nTheta_est=\n', S_est, '\n'
+                
+#                print '\nAt node = ', nodeID, '-----------------\nTheta_est=\n', S_est, '\n'                   
+#                print '\nCov = \n', alg.inv(S_est)
+#                if nodeID != 0:
+#                    print 'Theta_diff = \n', S_est - S_previous 
             
             e1, e2, e3, e4 = genGraph(S_actual, S_est, S_previous, empCov_set, nodeID, e1, e2, e3, e4, False)
-            print 'S_diff = \n', S_est - S_previous
+            
             S_previous = S_est
             
             if set_length == 1 and compare == True:               
@@ -484,7 +533,7 @@ for alpha in alpha_set:
         e2_set.append(e2)
         e3_set.append(e3)
         e4_set.append(e4)
-        
+#        print e4
         FroError.append(sum(e1))
         Score.append(sum(e2))
         AIC.append(sum(e3))
@@ -500,13 +549,18 @@ alpha = alpha_set[index31]
 beta =  beta_set[index32]
 try:
     x =  range(timesteps)
-    pl.subplot(411)    
-    pl.title(r'%s,$n_t$ = %s ($\lambda$, $\beta$) = (%s, %s)'%(Data_type, samplesPerStep, alpha, beta))
-    pl.plot(x, e1_set[ind], label = 'Use GL with penalty function')
-    pl.ylabel(r'$\|\Theta_{true} - \Theta_{est}\|_{F}$')
-    pl.subplot(412)
-    pl.plot(x, e2_set[ind])
-    pl.ylabel('Binary Error')
+    if cov_mode == 'Syn':
+        pl.subplot(411)    
+        pl.title(r'%s, $n_t$ = %s, ($\lambda$, $\beta$) = (%s, %s)'%(Data_type, samplesPerStep, alpha, beta))
+        pl.plot(x, e1_set[ind], label = 'Use GL with penalty function')
+        pl.ylabel(r'$\|\Theta_{true} - \Theta_{est}\|_{F}$')
+        pl.subplot(412)
+        pl.plot(x, e2_set[ind])
+        pl.ylabel('Binary Error')
+    else:
+        pl.subplot(411)    
+        pl.plot(x, e1_set[ind], label = 'Use GL with penalty function')
+        pl.title(r'%s, $n_t$ = %s, ($\lambda$, $\beta$) = (%s, %s)'%(Data_type, samplesPerStep, alpha, beta))
     pl.subplot(413)
     pl.plot(x, e3_set[ind])
     pl.ylabel('AIC: -logdet + BC')

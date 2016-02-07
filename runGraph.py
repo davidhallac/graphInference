@@ -38,7 +38,8 @@ index_penalty = 5
 # 289 SW airline 
 cov_mode = 'Stock'
 if cov_mode == 'Stock':
-#    stock_list = [2,321,30, 241, 477, 180]#[2,321,30, 241, 318, 372]# 477,180 #[2,321,30, 241, 333, 178]: another perturbed 
+#    stock_list = [2,321,30, 241, 477, 180]
+    #[2,321,30, 241, 318, 372]# 477,180 #[2,321,30, 241, 333, 178]: another perturbed 
     stock_list = range(524)
     #[2,321,30, 241, 371, 84] #[2,321,30, 241, 516,126]#[2,321,207, 241, 516,126]
     print 'stock_list = ', stock_list
@@ -75,7 +76,7 @@ sigma = 1
 kernel_width = 20
 use_kernel = False
 
-c = 1.5
+#c = 1.5
 set_length = 1
 compare = False
 comp_with = 'zeroBeta GL'
@@ -496,12 +497,12 @@ for alpha in alpha_set:
     #            print 'S_actual=', S_actual
             else:
                 S_actual = np.identity(size)
-#                print '\nAt node = ', nodeID, '-----------------\nEmpCov = \n', empCov_set[nodeID], '\nTheta_est=\n', S_est, '\n'
-                
+                print '\nAt node = ', nodeID, '-----------------\nEmpCov = \n', empCov_set[nodeID], '\nTheta_est=\n', S_est, '\n'
+#                
 #                print '\nAt node = ', nodeID, '-----------------\nTheta_est=\n', S_est, '\n'                   
-#                print '\nCov = \n', alg.inv(S_est)
-#                if nodeID != 0:
-#                    print 'Theta_diff = \n', S_est - S_previous 
+                print '\nCov = \n', alg.inv(S_est)
+                if nodeID != 0:
+                    print 'Theta_diff = \n', S_est - S_previous 
             
             e1, e2, e3, e4 = genGraph(S_actual, S_est, S_previous, empCov_set, nodeID, e1, e2, e3, e4, False)
             

@@ -165,6 +165,7 @@ class TGraphVX(TUNGraph):
         problem = Problem(objective, constraints)
         try:
             problem.solve()
+            #problem.solve(solver = MOSEK, verbose=True)
         except SolverError:
             problem.solve(solver=SCS)
         if problem.status in [INFEASIBLE_INACCURATE, UNBOUNDED_INACCURATE]:
@@ -1190,7 +1191,7 @@ def ADMM_z(entry, index_penalty = 1):
     
     #Select this parameter to determine which edge penalty to use:
     #1: L1-norm, 2: L2-norm, 3: Laplacian, 4: Perturbed-node, 5: L-inf norm
-    index_penalty = 2
+    index_penalty = 1
     
     #-----------------------Proximal operator ---------------------------
     a_ij = [] # 

@@ -22,7 +22,7 @@ system = 0 #MadMax
 filename = "/dfs/scratch0/abhisg/granular_analysis/new_data/0/2014-03-10/snapshots_0_2014-03-10_0_4.dat"
 if (sys.platform == 'darwin'):
 	system = 1 #Mac
-	filename = "/Users/Hallac/Desktop/vw_data.dat"
+	filename = "/Users/Hallac/Desktop/car_data.dat"
 
 for line in open(filename, 'r'):
 	item = line.rstrip()

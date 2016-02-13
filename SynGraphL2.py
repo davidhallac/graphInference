@@ -50,22 +50,22 @@ eps_rel = 1e-3
 
 # Choose a penalty function
 # 1: l1, 2: l2, 3: laplacian, 4: l-inf, 5: perturbation node penalty
-index_penalty = 5
+index_penalty = 2
 
 
 set_length = 1
 # Parameters for l2 penalty
-#aa = 0.3
-#bb = 7
+aa = 0.3
+bb = 7
 
 
 # Parameters for perturbed node penalty
-aa = 0.28
-bb = 5
+#aa = 0.28
+#bb = 5
 compare = True
 # Covariance matrix parameters
 cov_mode = 'Syn'
-cov_mode_number = 5 # 1,2,4: normal cov, 3: cov for laplacian, 5: perturbation 
+cov_mode_number = 2 # 1,2,4: normal cov, 3: cov for laplacian, 5: perturbation 
 low = 0.3
 upper = 0.6
 
@@ -552,13 +552,13 @@ beta =  beta_set[index32]
 x =  range(1,timesteps+1)
 if cov_mode == 'Syn':
     ax1 = pl.subplot(311)    
-    pl.title('Results for Local Shift with Perturbed Node Penalty')    
-#    pl.title(r'Performance Measures with $\ell_2$ Penalty for Global Shift')
+#    pl.title('Performance Measures with Perturbed Node Penalty for Local Shift')    
+    pl.title(r'Results for Global Shift with $\ell_2$ Penalty')
 #        pl.title(r'%s, $n_t$ = %s, ($\lambda$, $\beta$) = (%s, %s)'%(Data_type, samplesPerStep, alpha, beta))
     pl.plot(x, e1_set[ind])
-    pl.yticks([1.4,1.8,2.2,2.6])
+    pl.yticks([0.8,1.0,1.2,1.4])
     pl.axvline(x=51,color='r',ls='dashed')
-    pl.ylim([1.2,2.8])
+    pl.ylim([0.65,1.45])
     pl.ylabel('Abs. Error')
     ax1.set_xticklabels([])
     
@@ -566,9 +566,10 @@ if cov_mode == 'Syn':
     pl.plot(x, e2_set[ind])
     pl.yticks([0.4,0.6,0.8,1.0])
     pl.axvline(x=51,color='r',ls='dashed')
-    pl.ylim([0.4,1.0])
+    pl.ylim([0.3,1.0])
     pl.ylabel(r'$F_1$')
     ax2.set_xticklabels([])
+    
 else:
     pl.subplot(311)    
     pl.plot(x, e1_set[ind])
@@ -582,26 +583,26 @@ pl.ylabel('Temp. Dev.')
 pl.xlabel('Timestamp')
 pl.rcParams.update({'font.size':14})
 
-##print '\ne1_PN:', e1_set[ind]
-#print '\nave_PN:', np.mean(e1_set[ind][:49]),  np.mean(e1_set[ind][51:]), np.mean(e1_set[ind])
-##print '\new_PN:', e2_set[ind]
-#print '\nave_PN:', np.mean(e2_set[ind][:49]),  np.mean(e2_set[ind][51:]), np.mean(e2_set[ind])
-##print '\nee_PN:', e4_set[ind]
-#print '\nave_PN:', np.mean(e4_set[ind][:49]),  np.mean(e4_set[ind][51:]), np.mean(e4_set[ind])
+#print '\ne1_PN:', e1_set[ind]
+print '\nave_PN:', np.mean(e1_set[ind][:49]),  np.mean(e1_set[ind][51:]), np.mean(e1_set[ind])
+#print '\ne1_PN:', e2_set[ind]
+print '\nave_PN:', np.mean(e2_set[ind][:49]),  np.mean(e2_set[ind][51:]), np.mean(e2_set[ind])
+#print '\ne1_PN:', e4_set[ind]
+print '\nave_PN:', np.mean(e4_set[ind][:49]),  np.mean(e4_set[ind][51:]), np.mean(e4_set[ind])
 if set_length == 1 and compare == True:
     pl.subplot(311)     
     pl.plot(x, e11, label = comp_with)
     pl.subplot(312)
     pl.plot(x, e21)
     pl.subplot(313)
-    pl.semilogy(x, e41)    
-##    print '\ne1_Naive:', e11
-#    print '\nave_Naive:', np.mean(e11)
-##    print '\ne2_Naive:', e21
-#    print '\nave_Naive:', np.mean(e21)
-##    print '\ne3_Naive:', e41
-#    print '\nave_Naive:', np.mean(e41)
-##    pl.savefig('MeasurePlot')
+    pl.semilogy(x, e41)
+#    print '\ne1_Naive:', e11
+    print '\nave_Naive:', np.mean(e11)
+#    print '\ne2_Naive:', e21
+    print '\nave_Naive:', np.mean(e21)
+#    print '\ne3_Naive:', e41
+    print '\nave_Naive:', np.mean(e41)
+#    pl.savefig('MeasurePlot')
 Data_type = cov_mode + '%s'%(cov_mode_number) + '%s'%(samplesPerStep)
 pl.savefig(Data_type)
 pl.savefig(Data_type+'.eps', format = 'eps', bbox_inches = 'tight', dpi = 1000)

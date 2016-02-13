@@ -576,7 +576,7 @@ else:
     pl.title(r'%s, $n_t$ = %s, ($\lambda$, $\beta$) = (%s, %s)'%(Data_type, samplesPerStep, alpha, beta))
 
 ax3 = pl.subplot(313)
-pl.semilogy(x, e4_set[ind])
+david1, = pl.semilogy(x, e4_set[ind])
 pl.axvline(x=51,color='r',ls='dashed')
 #ax3.set_xticklabels([])
 pl.ylabel('Temp. Dev.')
@@ -595,7 +595,10 @@ if set_length == 1 and compare == True:
     pl.subplot(312)
     pl.plot(x, e21)
     pl.subplot(313)
-    pl.semilogy(x, e41)
+    david2, = pl.semilogy(x, e41)
+    pl.rc('legend',**{'fontsize':14})
+    david3 = pl.legend([david1,david2],['TVGL','Baseline'], ncol=2, loc=7, bbox_to_anchor=(1,0.57), columnspacing=0.4) 
+    david3.draw_frame(False)   
 #    print '\ne1_Naive:', e11
     print '\nave_Naive:', np.mean(e11)
 #    print '\ne2_Naive:', e21

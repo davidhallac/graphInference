@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Code to generate data and obtain results for the L2 synthetic graph from part 5a
+Infer the network for ALL companies in the S&P 500
 """
       
 import numpy as np
@@ -29,45 +29,41 @@ def timing_set(center, samplesPerStep_left, count_left, samplesPerStep_right, co
         start = start + samplesPerStep_right
     return time_set
     
-# Problem parameters
+# Problem parameters - used for generating random data in Section 5a (we can ignore this part of the code when working with stock data)
 size = 10   
 timesteps = 100
-samplesPerStep = 10
+samplesPerStep = 200
 numberOfCov = 2
 timeShift = int(np.ceil(float(timesteps)/numberOfCov)) #Number of steps till new covariance matrix appears
 eps = 3e-3
 
+#Stricter tolerance thresholds for finance
+eps_abs = 1e-4
+eps_rel = 1e-4
 
-eps_abs = 1e-3
-eps_rel = 1e-3
+
 
 # Choose a penalty function
 # 1: l1, 2: l2, 3: laplacian, 4: l-inf, 5: perturbation node penalty
-index_penalty = 2
+index_penalty = 1
 
 
 set_length = 1
-# Parameters for l2 penalty
-aa = 0.3
-bb = 7
-
-
-# Parameters for perturbed node penalty
-#aa = 0.28
-#bb = 5
-compare = True
+aa = 1
+bb = 20
+compare = False
 # Covariance matrix parameters
-cov_mode = 'Syn'
-cov_mode_number = 2 # 1,2,4: normal cov, 3: cov for laplacian, 5: perturbation 
+#cov_mode = 'Syn'
+cov_mode_number = 5 # 1,2,4: normal cov, 3: cov for laplacian, 5: perturbation 
 low = 0.3
 upper = 0.6
 
 
-
+cov_mode = 'Stock'
 if cov_mode == 'Stock':
-    samplesPerStep = 5
-    time_set = timing_set(101, samplesPerStep, 6, samplesPerStep, 8)
-
+    stock_list = range(524) #All companies
+    samplesPerStep = 3
+    time_set = timing_set(171, samplesPerStep , 5 , samplesPerStep, 5)
 
 # Kernel parameters
 #use_kernel = True
@@ -75,21 +71,14 @@ sigma = 1
 kernel_width = 20
 use_kernel = False
 
-#c = 1.5
 comp_with = 'zeroBeta GL'
 if set_length == 1:
-    alpha_set = [0.3]
-    if use_kernel == False:
-        beta_set = [10.0]
-    else:
-        print 'kernel = ', use_kernel, 'beta is kernel width'
-        beta_set  = [7.0] # kernel_width
     if cov_mode == 'Syn':
         alpha_set = [aa]
         beta_set = [bb]
     elif cov_mode == 'Stock':
-        alpha_set = [0.27] # apple case and flash crash
-        beta_set = [10]  # apple case
+        alpha_set = [0.18] # apple case and flash crash, to only get one event!
+        beta_set = [13]  # apple case
         
 else:
     compare = False
@@ -105,19 +94,19 @@ else:
 
 if index_penalty == 1:
     print 'Use l-1 penalty function'
-    from inferGraph1 import *
+    from inferGraphL1 import *
 elif index_penalty == 2:
     print 'Use l-2 penalty function'
-    from inferGraphL2 import *
+    from inferGraph2 import *
 elif index_penalty == 3:
     print 'Use laplacian penalty function'
-    from inferGraph3 import *
+    from inferGraphLaplacian import *
 elif index_penalty == 4:
     print 'Use l-inf penalty function'
     from inferGraph4 import *
 else:
     print 'Use perturbation node penalty function'
-    from inferGraph5 import *
+    from inferGraphPN import *
 
 
 #--------------------------------------- Define private functions ------------------------------------------
@@ -127,7 +116,6 @@ def genCovariace(size):
     itn = 0
     while(alg.det(S) <= 1e-3 and itn < MaxIter):
         itn = itn + 1
-        #print int(numpy.log2(size))*size
         G6 = GenRndGnm(PUNGraph, size, int((size*(size-1))*0.05))
         S = np.zeros((size,size))
         for EI in G6.Edges():
@@ -143,7 +131,6 @@ def genInvCov(size, low = 0 , upper = 0.6, portion = 0.05):
     G = GenRndGnm(PUNGraph, size, int((size*(size-1))*portion))
     for EI in G.Edges():
         value = (np.random.randint(2) - 0.5)*2*(low + (upper - low)*np.random.rand(1)[0])  
-#        print value
         S[EI.GetSrcNId(), EI.GetDstNId()] = value
     S = S + S.T
     vals = alg.eigvalsh(S)
@@ -156,7 +143,6 @@ def genMulCov(size, numberOfCov, low, upper, mode, portion = 0.05):
     minEVal_set = [] 
     m = size/3
     mm = m/2
-#    print m, mm
     S_init = np.zeros((size,size))
     for k in range(numberOfCov):
         S = np.zeros((size,size))
@@ -211,7 +197,7 @@ def getStocks(time_set, stock_list, data):
     timesteps = time_set.__len__()
     sample_set = []
     empCov_set = []
-    stock_data = np.genfromtxt('finance.csv', delimiter=',')
+    stock_data = np.genfromtxt('Datasets/finance.csv', delimiter=',')
 #    print stock_data
     size = stock_list.__len__()
 #    print 'timesteps = ',timestpes
@@ -290,8 +276,6 @@ def solveProblem(gvx, index_penalty, cov_mode, alpha, beta, timesteps, timeShift
                 empCov = genEmpCov_kernel(sigma, kernel_width, sample_set)
             else:
                 empCov = genEmpCov(x_samples)
-#                empCov = np.cov(x_samples)
-                
             empCov_set.append(np.asarray(empCov))
         else: 
             # Just use passed sample_set and empirical covariance set
@@ -301,8 +285,8 @@ def solveProblem(gvx, index_penalty, cov_mode, alpha, beta, timesteps, timeShift
                 kernel_width = beta
                 empCov = genEmpCov_kernel(sigma, kernel_width, sample_set)
                 empCov_set.append(np.asarray(empCov))
-        #	print empCov
-        	#Add Node, edge to previous timestamp
+        #   print empCov
+            #Add Node, edge to previous timestamp
         n_id = i
         S = semidefinite(size,name='S')
         obj = -log_det(S) + trace(empCov*S) #+ alpha*norm(S,1)
@@ -329,7 +313,7 @@ def solveProblem(gvx, index_penalty, cov_mode, alpha, beta, timesteps, timeShift
         
     
     t = time.time()
-    gvx.Solve(EpsAbs=eps_abs, EpsRel=eps_rel)
+    gvx.Solve(EpsAbs=eps_abs, EpsRel=eps_rel,Verbose=True,MaxIters=500)
     end = time.time() - t
     print 'time span = ',end
     return gvx, empCov_set
@@ -347,7 +331,7 @@ def genGraph(S_actual, S_est, S_previous, empCov_set, nodeID, e1, e2, e3, e4, di
     ind = (S_diff < 1e-2) & (S_diff > - 1e-2)
     S_diff[ind] = 0    
     K = np.count_nonzero(S_diff)
-    e1.append( alg.norm(offDiagDiff, 'fro'))
+    e1.append(-np.log(alg.det(S_est)) + np.trace(np.dot(S_est, empCov_set[nodeID])) + K)
     e2.append(2* P*R/(P+R))
     
     
@@ -355,13 +339,6 @@ def genGraph(S_actual, S_est, S_previous, empCov_set, nodeID, e1, e2, e3, e4, di
     e3.append(-np.log(alg.det(S_est)) + np.trace(np.dot(S_est, empCov_set[nodeID])) + K)
     e4.append(alg.norm(S_est -  S_previous, 'fro'))
     
-    display = False
-    if display == True:
-        if (nodeID >timeShift -10) and (nodeID < timeShift + 10):
-            print 'nodeID = ', nodeID
-            print 'S_true = ', S_actual,'\nS_est', S_est
-#            print 'S_error = ',S_actual - S_est, '\n its Fro error = ', alg.norm(S_actual - S_est, 'fro')
-            print 'D = ',D,'T = ', T,'TandD = ', TandD,'K = ', K,'P = ', P,'R = ', R,'Score = ', 2* P*R/(P+R)
             
     return e1, e2, e3, e4
 #--------------------------------------------- End Defining functions -------------------------------------- 
@@ -369,6 +346,7 @@ def genGraph(S_actual, S_est, S_previous, empCov_set, nodeID, e1, e2, e3, e4, di
 
 # Generate sparse, random, inverse covariance matrix (inverse of inverseCov is original covariance matrix)
 np.random.seed(1)
+#numpy.set_printoptions(suppress=True, precision = 3, threshold = 20)
 numpy.set_printoptions(suppress=True, precision = 3)
 
 
@@ -447,6 +425,13 @@ for alpha in alpha_set:
     #            print 'S_actual=', S_actual
             else:
                 S_actual = np.identity(size)
+                print '\nAt node = ', nodeID, '-----------------\nEmpCov = \n', empCov_set[nodeID], '\nTheta_est=\n', S_est, '\n'
+#                
+#                print '\nAt node = ', nodeID, '-----------------\nTheta_est=\n', S_est, '\n'                   
+                print '\nCov = \n', alg.inv(S_est)
+                if nodeID != 0:
+                    print 'Theta_diff = \n', S_est - S_previous 
+                    print 'FRONORM = ', alg.norm(S_est-S_previous, 'fro')
             
             e1, e2, e3, e4 = genGraph(S_actual, S_est, S_previous, empCov_set, nodeID, e1, e2, e3, e4, False)
             
@@ -478,58 +463,42 @@ index4, index41, index42 = indicesOfExtremeValue(FroThetaDiff, set_length, 'min'
 ind = index3
 alpha = alpha_set[index31]
 beta =  beta_set[index32]
-#try:
-x =  range(1,timesteps+1)
-if cov_mode == 'Syn':
-    ax1 = pl.subplot(311)    
-    pl.title(r'Results for Global Shift with $\ell_2$ Penalty')
-    pl.plot(x, e1_set[ind])
-    pl.yticks([0.8,1.0,1.2,1.4])
-    pl.axvline(x=51,color='r',ls='dashed')
-    pl.ylim([0.65,1.45])
-    pl.ylabel('Abs. Error')
-    ax1.set_xticklabels([])
-    
-    ax2 = pl.subplot(312)
-    pl.plot(x, e2_set[ind])
-    pl.yticks([0.4,0.6,0.8,1.0])
-    pl.axvline(x=51,color='r',ls='dashed')
-    pl.ylim([0.3,1.0])
-    pl.ylabel(r'$F_1$')
-    ax2.set_xticklabels([])
-    
-else:
-    pl.subplot(311)    
-    pl.plot(x, e1_set[ind])
-    pl.title(r'%s, $n_t$ = %s, ($\lambda$, $\beta$) = (%s, %s)'%(Data_type, samplesPerStep, alpha, beta))
-
-ax3 = pl.subplot(313)
-david1, = pl.semilogy(x, e4_set[ind])
-pl.axvline(x=51,color='r',ls='dashed')
-pl.ylabel('Temp. Dev.')
-pl.xlabel('Timestamp')
-pl.rcParams.update({'font.size':14})
-
-print '\nave_PN:', np.mean(e1_set[ind][:49]),  np.mean(e1_set[ind][51:]), np.mean(e1_set[ind])
-print '\nave_PN:', np.mean(e2_set[ind][:49]),  np.mean(e2_set[ind][51:]), np.mean(e2_set[ind])
-print '\nave_PN:', np.mean(e4_set[ind][:49]),  np.mean(e4_set[ind][51:]), np.mean(e4_set[ind])
-if set_length == 1 and compare == True:
-    pl.subplot(311)     
-    pl.plot(x, e11, label = comp_with)
-    pl.subplot(312)
-    pl.plot(x, e21)
-    pl.subplot(313)
-    david2, = pl.semilogy(x, e41)
-    pl.rc('legend',**{'fontsize':14})
-    david3 = pl.legend([david1,david2],['TVGL','Baseline'], ncol=2, loc=7, bbox_to_anchor=(1,0.57), columnspacing=0.4) 
-    david3.draw_frame(False)   
-    print '\nave_Naive:', np.mean(e11)
-    print '\nave_Naive:', np.mean(e21)
-    print '\nave_Naive:', np.mean(e41)
-Data_type = cov_mode + '%s'%(cov_mode_number) + '%s'%(samplesPerStep)
-pl.savefig(Data_type)
-pl.savefig(Data_type+'.eps', format = 'eps', bbox_inches = 'tight', dpi = 1000)
-pl.show()
+try:
+    x =  range(timesteps)
+    if cov_mode == 'Syn':
+        pl.subplot(411)    
+        pl.title(r'%s, $n_t$ = %s, ($\lambda$, $\beta$) = (%s, %s)'%(Data_type, samplesPerStep, alpha, beta))
+        pl.plot(x, e1_set[ind], label = 'Use GL with penalty function')
+        pl.ylabel(r'$\|\Theta_{true} - \Theta_{est}\|_{F}$')
+        pl.subplot(412)
+        pl.plot(x, e2_set[ind])
+        pl.ylabel('Binary Error')
+    else:
+        pl.subplot(411)    
+        pl.plot(x, e1_set[ind], label = 'Use GL with penalty function')
+        pl.title(r'%s, $n_t$ = %s, ($\lambda$, $\beta$) = (%s, %s)'%(Data_type, samplesPerStep, alpha, beta))
+    pl.subplot(413)
+    pl.plot(x, e3_set[ind])
+    pl.ylabel('AIC: -logdet + BC')
+    pl.subplot(414)
+    pl.semilogy(x, e4_set[ind])
+    pl.ylabel(r'$\|\Theta_i - \Theta_{i-1}\|_{F}$')
+    if set_length == 1 and compare == True:
+        pl.subplot(411)     
+        pl.plot(x, e11, label = comp_with)
+        pl.subplot(412)
+        pl.plot(x, e21)
+        pl.subplot(413)
+        pl.plot(x, e31)
+        pl.subplot(414)
+        pl.semilogy(x, e41)
+#    pl.savefig('MeasurePlot')
+    Data_type = cov_mode + '%s'%(cov_mode_number) + '%s'%(samplesPerStep)
+    pl.savefig(Data_type)
+    pl.show()
+    print '\nSuceed to save' + Data_type
+except:
+    print 'fail to save plots'
 if set_length > 1:
     #print index1, index11, index12, index2, index21, index22
     print 'alpha = ', alpha_set[index11], ' beta = ', beta_set[index12], ' FroError = ', FroError[index1]

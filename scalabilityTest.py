@@ -1,18 +1,18 @@
-from inferGraph import *
+from inferGraphScalability import *
+# from snapvx import *
+
 import numpy as np
 import numpy.linalg as alg
 import scipy as spy
 import __builtin__
 
-#import matplotlib.pyplot as plt
 import matplotlib.pylab as pl
-#import matplotlib.animation as an
 import time
-# for size 10, alph = 0.1 beta = 0.6
 
-sizeList = [2,3,4,5,6,7,8,9,10,50,100,200,300,500,707,900,1000,1100]
+# sizeList = [2,3,4,5,6,7,8,9,10,50,100,200,300,500,707,900,1000,1100]
+sizeList = [2,3,4]
 timeList = [10]
-useCVX = False
+useCVX = True
 
 np.random.seed(0)
 timingVals = np.zeros([__builtin__.len(sizeList), __builtin__.len(timeList)])
@@ -20,9 +20,6 @@ for sizeTemp in range(__builtin__.len(sizeList)):
     for timeTemp in range(__builtin__.len(timeList)):
 
 
-# Problem parameters
-# size = 500
-# timesteps = 10# size/2
         size = sizeList[sizeTemp]
         timesteps = timeList[timeTemp]
         print "Solving for size", size, ", timesteps ", timesteps
@@ -34,9 +31,6 @@ for sizeTemp in range(__builtin__.len(sizeList)):
         # Optimization parameters
         alpha = 0.1 # Lasso parameter
         beta = 0.6 # Weight between basis nodes
-        #set_length = 1
-        #alpha_set = np.linspace(0.1,10,set_length)
-        #beta_set = np.linspace(3,10,set_length)
         FroError = []
         Score = []
 
@@ -44,16 +38,10 @@ for sizeTemp in range(__builtin__.len(sizeList)):
         np.set_printoptions(suppress=True, precision = 3, threshold = 5)
         S_true = np.zeros((size,size))
         while (alg.det(S_true) <= 1e-2 ):
-            #print int(numpy.log2(size))*size
             G6 = GenRndGnm(PUNGraph, size, int((size**2)*0.05))
-            #G6 = snap.GenRndGnm(snap.PUNGraph, 5, 5)
             S_true = numpy.zeros((size,size))
             for EI in G6.Edges():
-                S_true[EI.GetSrcNId(), EI.GetDstNId()] = 0.6 #  np.random.rand(1) #2*(numpy.random.rand(1)-0.5)
-            #    S[EI.GetSrcNId(), EI.GetDstNId()] =  2*(np.random.rand(1)-0.5)
-        #        print "edge (%d, %d)" % (EI.GetSrcNId(), EI.GetDstNId())
-            #print S, S.max(axis = 1)
-            #S =  S + S.T + np.diag( S.max(axis = 1) )#S.max()*numpy.matrix(numpy.eye(size))
+                S_true[EI.GetSrcNId(), EI.GetDstNId()] = 0.6 
             if(size < 10):
                 #So we get positive definite matrices, since S_true.max is often 0
                 S_true =  S_true + S_true.T + size*0.2*np.matrix(np.eye(size))
@@ -66,14 +54,9 @@ for sizeTemp in range(__builtin__.len(sizeList)):
         while (alg.det(S_true2) <= 1e-2 ):
             #print int(numpy.log2(size))*size
             G6 = GenRndGnm(PUNGraph, size, int((size**2)*0.05))
-            #G6 = snap.GenRndGnm(snap.PUNGraph, 5, 5)
             S_true2 = np.zeros((size,size))
             for EI in G6.Edges():
-                S_true2[EI.GetSrcNId(), EI.GetDstNId()] = 0.6 #  np.random.rand(1) #2*(numpy.random.rand(1)-0.5)
-            #    S[EI.GetSrcNId(), EI.GetDstNId()] =  2*(np.random.rand(1)-0.5)
-        #        print "edge (%d, %d)" % (EI.GetSrcNId(), EI.GetDstNId())
-            #print S, S.max(axis = 1)
-            #S =  S + S.T + np.diag( S.max(axis = 1) )#S.max()*numpy.matrix(numpy.eye(size))
+                S_true2[EI.GetSrcNId(), EI.GetDstNId()] = 0.6
             if(size < 10):
                 S_true2 =  S_true2 + S_true2.T + size*0.2*np.matrix(np.eye(size))
             else:
@@ -85,14 +68,9 @@ for sizeTemp in range(__builtin__.len(sizeList)):
         while (alg.det(S_true3) <= 1e-2 ):
             #print int(numpy.log2(size))*size
             G6 = GenRndGnm(PUNGraph, size, int((size**2)*0.05))
-            #G6 = snap.GenRndGnm(snap.PUNGraph, 5, 5)
             S_true3 = np.zeros((size,size))
             for EI in G6.Edges():
-                S_true3[EI.GetSrcNId(), EI.GetDstNId()] = 0.6 #  np.random.rand(1) #2*(numpy.random.rand(1)-0.5)
-            #    S[EI.GetSrcNId(), EI.GetDstNId()] =  2*(np.random.rand(1)-0.5)
-        #        print "edge (%d, %d)" % (EI.GetSrcNId(), EI.GetDstNId())
-            #print S, S.max(axis = 1)
-            #S =  S + S.T + np.diag( S.max(axis = 1) )#S.max()*numpy.matrix(numpy.eye(size))
+                S_true3[EI.GetSrcNId(), EI.GetDstNId()] = 0.6 
             if(size < 10):
                 S_true3 =  S_true3 + S_true3.T + size*0.2*np.matrix(np.eye(size))
             else:            
@@ -127,7 +105,6 @@ for sizeTemp in range(__builtin__.len(sizeList)):
         		currVar = gvx.GetNodeVariables(n_id)
         		prevVar = gvx.GetNodeVariables(prev_Nid)
         		edge_obj = beta*norm(currVar['S'] - prevVar['S'],1) # one norm penalty function
-        #		edge_obj = beta*norm(currVar['S'] - prevVar['S'],2) # two norm penalty function
         		gvx.AddEdge(n_id, prev_Nid, Objective=edge_obj)
 
         	#Add rake nodes, edges

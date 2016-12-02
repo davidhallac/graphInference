@@ -164,7 +164,7 @@ class TGraphVX(TUNGraph):
         objective = m_func(objective)
         problem = Problem(objective, constraints)
         try:
-            problem.solve(solver=CVXOPT)
+            problem.solve(solver=SCS)
         except SolverError:
             print "Using SCS"
             problem.solve(solver=SCS)

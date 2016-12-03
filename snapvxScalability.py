@@ -1006,7 +1006,7 @@ def ADMM_x(entry):
     constraints = entry[X_CON]
     problem = Problem(objective, constraints)
     try:
-        problem.solve()
+        problem.solve(solver=SCS)
     except SolverError:
         problem.solve(solver=SCS)
     if problem.status in [INFEASIBLE_INACCURATE, UNBOUNDED_INACCURATE]:
@@ -1036,7 +1036,7 @@ def ADMM_z(entry):
     objective = m_func(objective + (rho / 2) * norms)
     problem = Problem(objective, constraints)
     try:
-        problem.solve()
+        problem.solve(solver=SCS)
     except SolverError:
         problem.solve(solver=SCS)
     if problem.status in [INFEASIBLE_INACCURATE, UNBOUNDED_INACCURATE]:

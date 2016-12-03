@@ -10,7 +10,7 @@ import matplotlib.pylab as pl
 import time
 
 # sizeList = [2,3,4,5,6,7,8,9,10,50,100,200,300,500,707,900,1000,1100]
-sizeList = [2,3,4,5,6,7,8,9,10,50,100,200,300,500]
+sizeList = [2,3,4,5]#,5,6,7,8,9,10,50,100,200,300,500]
 timeList = [10]
 useCVX = False
 

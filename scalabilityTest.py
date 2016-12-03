@@ -1,5 +1,5 @@
 from inferGraphScalability import *
-# from snapvx import *
+from snapvxScalability import *
 
 import numpy as np
 import numpy.linalg as alg

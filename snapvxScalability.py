@@ -1036,7 +1036,7 @@ def ADMM_z(entry):
     objective = m_func(objective + (rho / 2) * norms)
     problem = Problem(objective, constraints)
     try:
-        problem.solve(solver=SCS)
+        problem.solve()
     except SolverError:
         problem.solve(solver=SCS)
     if problem.status in [INFEASIBLE_INACCURATE, UNBOUNDED_INACCURATE]:

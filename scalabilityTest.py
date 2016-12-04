@@ -10,7 +10,7 @@ import matplotlib.pylab as pl
 import time
 
 # sizeList = [2,3,4,5,6,7,8,9,10,50,100,200,300,500,707,900,1000,1100]
-sizeList = [2,3,4,5,6,7,8,9,10,11,12,13,14,15]#,100,200]#,300,500]
+sizeList = [2]#,3,4,5,6,7,8,9,10,11,12,13,14,15]#,100,200]#,300,500]
 timeList = [10]
 useCVX = False
 
@@ -116,7 +116,7 @@ for sizeTemp in range(__builtin__.len(sizeList)):
         if(useCVX):
             gvx.Solve( UseADMM = False)
         else:
-            gvx.Solve(Rho = 0.5, Verbose=True)
+            gvx.Solve(Rho = 1, Verbose=True)
 
         end = time.time() - t
         print "SOLUTION TIME", end

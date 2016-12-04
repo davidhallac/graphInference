@@ -1,5 +1,5 @@
-# from inferGraphScalability import * #USECVX = TRUE, SCS
-from snapvxScalability import * #USECVX = FALSE, Naive ADMM
+from inferGraphScalability import * #USECVX = TRUE, SCS
+# from snapvxScalability import * #USECVX = FALSE, Naive ADMM
 
 import numpy as np
 import numpy.linalg as alg
@@ -12,7 +12,7 @@ import time
 # sizeList = [2,3,4,5,6,7,8,9,10,50,100,200,300,500,707,900,1000,1100]
 sizeList = [2,3,4,5,6,7,8,9,10,11,12,13,14,15]#,100,200]#,300,500]
 timeList = [10]
-useCVX = False
+useCVX = True
 
 np.random.seed(0)
 timingVals = np.zeros([__builtin__.len(sizeList), __builtin__.len(timeList)])

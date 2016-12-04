@@ -10,7 +10,7 @@ import matplotlib.pylab as pl
 import time
 
 # sizeList = [2,3,4,5,6,7,8,9,10,50,100,200,300,500,707,900,1000,1100]
-sizeList = [2,3,4,5,6,7,8,9,10,11,12,13,14,15]#,100,200]#,300,500]
+sizeList = [10,15,20,25,50]#,100,200]#,300,500]
 timeList = [10]
 useCVX = True
 
@@ -38,6 +38,7 @@ for sizeTemp in range(__builtin__.len(sizeList)):
         np.set_printoptions(suppress=True, precision = 3, threshold = 5)
         S_true = np.zeros((size,size))
         while (alg.det(S_true) <= 1e-2 ):
+            # print "CASE 1"
             G6 = GenRndGnm(PUNGraph, size, int((size**2)*0.05))
             S_true = numpy.zeros((size,size))
             for EI in G6.Edges():
@@ -52,6 +53,7 @@ for sizeTemp in range(__builtin__.len(sizeList)):
         Cov = alg.inv(S_true)
         S_true2 = numpy.zeros((size,size))
         while (alg.det(S_true2) <= 1e-2 ):
+            # print "CASE 2"
             #print int(numpy.log2(size))*size
             G6 = GenRndGnm(PUNGraph, size, int((size**2)*0.05))
             S_true2 = np.zeros((size,size))
@@ -60,12 +62,13 @@ for sizeTemp in range(__builtin__.len(sizeList)):
             if(size < 10):
                 S_true2 =  S_true2 + S_true2.T + size*0.2*np.matrix(np.eye(size))
             else:
-                S_true2 =  S_true2 + S_true2.T + S_true2.max()*np.matrix(np.eye(size))
+                S_true2 =  S_true2 + S_true2.T + 2*S_true2.max()*np.matrix(np.eye(size))
         #    print S
         #    print alg.det(S_true2)
         Cov2 = alg.inv(S_true2)
         S_true3 = numpy.zeros((size,size))
         while (alg.det(S_true3) <= 1e-2 ):
+            # print "CASE 3"            
             #print int(numpy.log2(size))*size
             G6 = GenRndGnm(PUNGraph, size, int((size**2)*0.05))
             S_true3 = np.zeros((size,size))
@@ -74,7 +77,7 @@ for sizeTemp in range(__builtin__.len(sizeList)):
             if(size < 10):
                 S_true3 =  S_true3 + S_true3.T + size*0.2*np.matrix(np.eye(size))
             else:            
-                S_true3 =  S_true3 + S_true3.T + S_true3.max()*np.matrix(np.eye(size))
+                S_true3 =  S_true3 + S_true3.T + 2*S_true3.max()*np.matrix(np.eye(size))
         #    print S
         #    print alg.det(S_true2)
         Cov3 = alg.inv(S_true3)

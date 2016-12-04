@@ -116,7 +116,7 @@ for sizeTemp in range(__builtin__.len(sizeList)):
         if(useCVX):
             gvx.Solve( UseADMM = False)
         else:
-            gvx.Solve(Rho = 1, Verbose=True)
+            gvx.Solve(Rho = 0.1, Verbose=True)
 
         end = time.time() - t
         print "SOLUTION TIME", end

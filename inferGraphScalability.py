@@ -164,11 +164,12 @@ class TGraphVX(TUNGraph):
         objective = m_func(objective)
         problem = Problem(objective, constraints)
         try:
-            problem.solve(solver=SCS, eps = 1e-7)
+            problem.solve(solver=SCS, eps = 1e-7, verbose=True)
         except SolverError:
             print "Using SCS"
             problem.solve(solver=SCS)
         if problem.status in [INFEASIBLE_INACCURATE, UNBOUNDED_INACCURATE]:
+            print "NOT SOLVED"
             problem.solve(solver=SCS)
         # Set TGraphVX status and value to match CVXPY
         self.status = problem.status

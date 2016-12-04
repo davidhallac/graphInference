@@ -1008,7 +1008,7 @@ def ADMM_x(entry):
     try:
         # print problem.get_problem_data('SCS')
         print problem
-        problem.solve(solver=SCS)
+        problem.solve()
     except SolverError:
         problem.solve(solver=SCS)
     if problem.status in [INFEASIBLE_INACCURATE, UNBOUNDED_INACCURATE]:

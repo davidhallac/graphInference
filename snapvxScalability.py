@@ -1007,7 +1007,6 @@ def ADMM_x(entry):
     problem = Problem(objective, constraints)
     try:
         # print problem.get_problem_data('SCS')
-        print problem
         problem.solve()
     except SolverError:
         problem.solve(solver=SCS)

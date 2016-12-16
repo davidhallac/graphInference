@@ -197,6 +197,7 @@ def genMulCov(size, numberOfCov, low, upper, mode, portion = 0.05):
     return S_set, Cov_set   
      
 def genEmpCov(samples, useKnownMean = False, m = 0):
+    
     size, samplesPerStep = samples.shape
     if useKnownMean == False:
         m = np.mean(samples, axis = 1)

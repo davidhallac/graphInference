@@ -1126,7 +1126,7 @@ def ADMM_x(entry):
         a = numpy.zeros(mat_shape) 
 #        print 'degree = ', entry[X_DEG]
         for i in xrange(entry[X_DEG]):  # entry[X_DEG] = 3 if the node is neither first and the last one   
-            print 'here 3-1-1' 
+#            print 'here 3-1-1' 
             z_index = X_NEIGHBORS + (2 * i)
             u_index = z_index + 1
             zi = entry[z_index]
@@ -1135,7 +1135,7 @@ def ADMM_x(entry):
             # Add norm for Variables corresponding to the node
             for (varID, varName, var, offset) in variables:
                  
-                print 'here 3-1-1-1', 
+#                print 'here 3-1-1-1', 
                 z = getValue(edge_z_vals, zi + offset, var.size[0])
                 u = getValue(edge_u_vals, ui + offset, var.size[0])
                 a += (z-u) 
@@ -1148,10 +1148,10 @@ def ADMM_x(entry):
 #        x_var = X[numpy.triu_indices(numpymat.shape[1])] # extract upper triangular part as update variable      
 #        print 'x_update = ',x_var
 #        solution = numpy.matrix(x_var).T
-        print 'here3-2'
+#        print 'here3-2'
         x_update = Prox_logdet(numpymat, A, eta)
         solution = numpy.array(x_update).T.reshape(-1)
-        print 'here3-4'
+#        print 'here3-4'
         writeValue(node_vals, entry[X_IND] + variables[0][3], solution, variables[0][2].size[0]) 
         print 'here3-4'
     else:
@@ -1207,6 +1207,7 @@ def ADMM_z(entry, index_penalty = 1):
     #1: L1-norm, 2: L2-norm, 3: Laplacian, 4: L-inf norm, 5: Perturbed-node
     index_penalty = 2
     
+    print 'here4-0'
     #-----------------------Proximal operator ---------------------------
     if index_penalty != 2:
         a_ij = [] # 
@@ -1241,6 +1242,7 @@ def ADMM_z(entry, index_penalty = 1):
     #    print 'alpha/beta = ', entry[1].args[0].value 
         eta = entry[1].args[0].value/rho # where entry[1].args[0].value can be alpha or bete depending on NID_diff
     
+        print 'here4-1'
         if (numpy.abs(NID_diff) <= 1): # for psi penalty edge
     #        beta = entry[1].args[0].value
             [z_ij, z_ji] =  Prox_penalty(a_ij, a_ji, eta, index_penalty)
@@ -1249,6 +1251,7 @@ def ADMM_z(entry, index_penalty = 1):
     #        print 'we are in lasso penalty edge, alpha = ', entry[1].args[0].value
             [z_ij, z_ji] = Prox_lasso(a_ij, a_ji, eta, NID_diff) 
     
+        print 'here4-2'
         if (NID_diff >= -1):
             writeValue(edge_z_vals, entry[Z_ZIJIND] + variables_i[0][3], z_ij, variables_i[0][2].size[0])
         if (NID_diff <= 1):

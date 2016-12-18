@@ -1111,7 +1111,7 @@ def ADMM_x(entry):
     global rho
     variables = entry[X_VARS]
 #    norms = 0
-    print 'here 3-0'
+#    print 'here 3-0'
     
     #-----------------------Proximal operator ---------------------------
     x_update = [] # proximal update for the variable x
@@ -1121,7 +1121,7 @@ def ADMM_x(entry):
         numpymat = cvxpyMat.value
         n_t      = 1 # Assume number of samples is 1 at each node, need to be alterned alter
         # Iterate through all neighbors of the node
-        print 'here 3-1'
+#        print 'here 3-1'
         mat_shape = ( int( numpymat.shape[1] *  ( numpymat.shape[1]+1 )/2.0 ) ,)
         a = numpy.zeros(mat_shape) 
 #        print 'degree = ', entry[X_DEG]
@@ -1153,7 +1153,7 @@ def ADMM_x(entry):
         solution = numpy.array(x_update).T.reshape(-1)
 #        print 'here3-4'
         writeValue(node_vals, entry[X_IND] + variables[0][3], solution, variables[0][2].size[0]) 
-        print 'here3-4'
+#        print 'here3-4'
     else:
 #        print 'we are in the dummy node'
         x_update = [] # no variable to update for dummy node
@@ -1207,7 +1207,7 @@ def ADMM_z(entry, index_penalty = 1):
     #1: L1-norm, 2: L2-norm, 3: Laplacian, 4: L-inf norm, 5: Perturbed-node
     index_penalty = 2
     
-    print 'here4-0'
+#    print 'here4-0'
     #-----------------------Proximal operator ---------------------------
     if index_penalty < 6:
         a_ij = [] # 
@@ -1242,7 +1242,7 @@ def ADMM_z(entry, index_penalty = 1):
     #    print 'alpha/beta = ', entry[1].args[0].value 
         eta = entry[1].args[0].value/rho # where entry[1].args[0].value can be alpha or bete depending on NID_diff
     
-        print 'here4-1'
+#        print 'here4-1'
         if (numpy.abs(NID_diff) <= 1): # for psi penalty edge
     #        beta = entry[1].args[0].value
             [z_ij, z_ji] =  Prox_penalty(a_ij, a_ji, eta, index_penalty)
@@ -1251,7 +1251,7 @@ def ADMM_z(entry, index_penalty = 1):
     #        print 'we are in lasso penalty edge, alpha = ', entry[1].args[0].value
             [z_ij, z_ji] = Prox_lasso(a_ij, a_ji, eta, NID_diff) 
     
-        print 'here4-2'
+#        print 'here4-2'
         if (NID_diff >= -1):
             writeValue(edge_z_vals, entry[Z_ZIJIND] + variables_i[0][3], z_ij, variables_i[0][2].size[0])
         if (NID_diff <= 1):

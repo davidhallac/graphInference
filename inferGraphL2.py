@@ -1200,7 +1200,7 @@ def ADMM_z(entry, index_penalty = 1):
     index_penalty = 2
     
     #-----------------------Proximal operator ---------------------------
-    if index_penalty != 2:
+    if index_penalty < 5:
         a_ij = [] # 
         flag = 0
         variables_i = entry[Z_IVARS]

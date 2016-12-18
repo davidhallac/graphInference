@@ -1111,6 +1111,7 @@ def ADMM_x(entry):
     global rho
     variables = entry[X_VARS]
 #    norms = 0
+    print 'here 3-0'
     
     #-----------------------Proximal operator ---------------------------
     x_update = [] # proximal update for the variable x

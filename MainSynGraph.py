@@ -208,7 +208,7 @@ def genEmpCov(sample_set, kernel_use = 'False', kernel_width = 1, kernel_sigma =
     timestamps      = sample_set.__len__()
     samplesPerStep  = sample_set[0].shape[1]
     if kernel_use:
-        kernel_width = np.ceil(np.power(samplesPerStep, 1.0/3 ))
+        kernel_width = np.ceil(np.power(timestamps, 1.0/3 ))
             
     for i in range(timestamps):
         # Generate or find the covariance matrix at i, for synthetic/real and kernel/non-kernel cases

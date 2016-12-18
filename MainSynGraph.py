@@ -397,7 +397,7 @@ for alpha in alpha_set:
         print '--------------- alpha = %s, beta = %s ---------------'%(alpha, beta)
         gvx = TGraphVX()   
         gvx_naive = TGraphVX()
-        gvx = solveProblem(gvx, index_penalty, alpha, beta, empCov_set, eps_abs, eps_rel)
+        gvx = solveProblem(gvx, index_penalty, alpha, beta, empCov_set, epsAbs, epsRel)
         if setLength == 1 and compare == True:
             gvx_naive = solveProblem(gvx_naive, index_penalty, alpha, 0, empCov_set, epsAbs, epsRel) 
         e1 = []

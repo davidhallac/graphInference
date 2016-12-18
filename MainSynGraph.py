@@ -309,7 +309,7 @@ def solveProblem(gvx, index_penalty, alpha, beta, empCov_set, epsAbs = 1e-4, eps
 def genGraph(S_actual, S_est, S_previous, empCov_set, nodeID, e1, e2, e3, e4, display = False):
     D   = np.where(S_est != 0)[0].shape[0]
     T   = np.where(S_actual != 0)[0].shape[0]
-    TandD = float(np.where(np.logical_and(S_actual,S_est) == True)[0].shape[0])m
+    TandD = float(np.where(np.logical_and(S_actual,S_est) == True)[0].shape[0])
     P   = TandD/D
     R   = TandD/T
     

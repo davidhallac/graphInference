@@ -1209,7 +1209,7 @@ def ADMM_z(entry, index_penalty = 1):
     
     print 'here4-0'
     #-----------------------Proximal operator ---------------------------
-    if index_penalty != 2:
+    if index_penalty < 6:
         a_ij = [] # 
         flag = 0
         variables_i = entry[Z_IVARS]

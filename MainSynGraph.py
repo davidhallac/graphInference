@@ -298,11 +298,13 @@ def solveProblem(gvx, index_penalty, alpha, beta, empCov_set, epsAbs = 1e-4, eps
         gvx.AddEdge(n_id, n_id + timestamps, Objective=alpha*norm(S,1))
     print 'here2'    
     t = time.time()
-    gvx.Solve( numProcessors = 1, EpsAbs=epsAbs, EpsRel=epsRel)
+    gvx.Solve( NumProcessors = 1, EpsAbs=epsAbs, EpsRel=epsRel)
     end = time.time() - t
     print 'time span = ',end
     return gvx
     
+    
+    # [12/18/16, 2:00:28 PM] David Hallac: numProcessors
 def genGraph(S_actual, S_est, S_previous, empCov_set, nodeID, e1, e2, e3, e4, display = False):
     D   = np.where(S_est != 0)[0].shape[0]
     T   = np.where(S_actual != 0)[0].shape[0]

@@ -270,6 +270,7 @@ def upper2Full(a, eps = 0):
 def solveProblem(gvx, index_penalty, alpha, beta, empCov_set, epsAbs = 1e-4, epsRel = 1e-4):
     # Solve the problem via SnapVX, being passed by empirical covariance matrices
     timestamps = empCov_set.__len__()
+    print 'here1'
     for i in range(timestamps):
         #Add Node, edge to previous timestamp
         empCov = empCov_set[i] 
@@ -295,7 +296,7 @@ def solveProblem(gvx, index_penalty, alpha, beta, empCov_set, epsAbs = 1e-4, eps
         #Add rake nodes, edges
         gvx.AddNode(n_id + timestamps)
         gvx.AddEdge(n_id, n_id + timestamps, Objective=alpha*norm(S,1))
-        
+    print 'here2'    
     t = time.time()
     gvx.Solve(EpsAbs=epsAbs, EpsRel=epsRel)
     end = time.time() - t
@@ -397,9 +398,10 @@ for alpha in alpha_set:
         print '--------------------- alpha = %s, beta = %s --------------------'%(alpha, beta)
         gvx = TGraphVX()   
         gvx_naive = TGraphVX()
+#        print 'solve gvx'
         gvx = solveProblem(gvx, index_penalty, alpha, beta, empCov_set, epsAbs, epsRel)
         if setLength == 1 and compare == True:
-            print 'solve naive problem'
+#            print 'solve naive gvx'
             gvx_naive = solveProblem(gvx_naive, index_penalty, alpha, 0, empCov_set, epsAbs, epsRel) 
         e1 = []
         e2 = []

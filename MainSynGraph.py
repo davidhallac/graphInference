@@ -298,7 +298,7 @@ def solveProblem(gvx, index_penalty, alpha, beta, empCov_set, epsAbs = 1e-4, eps
         gvx.AddEdge(n_id, n_id + timestamps, Objective=alpha*norm(S,1))
     print 'here2'    
     t = time.time()
-    gvx.Solve(EpsAbs=epsAbs, EpsRel=epsRel)
+    gvx.Solve( numProcessors = 1, EpsAbs=epsAbs, EpsRel=epsRel)
     end = time.time() - t
     print 'time span = ',end
     return gvx

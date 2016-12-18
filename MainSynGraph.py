@@ -270,7 +270,7 @@ def upper2Full(a, eps = 0):
 def solveProblem(gvx, index_penalty, alpha, beta, empCov_set, epsAbs = 1e-4, epsRel = 1e-4):
     # Solve the problem via SnapVX, being passed by empirical covariance matrices
     timestamps = empCov_set.__len__()
-    print 'here1'
+#    print 'here1'
     for i in range(timestamps):
         #Add Node, edge to previous timestamp
         empCov = empCov_set[i] 
@@ -296,9 +296,10 @@ def solveProblem(gvx, index_penalty, alpha, beta, empCov_set, epsAbs = 1e-4, eps
         #Add rake nodes, edges
         gvx.AddNode(n_id + timestamps)
         gvx.AddEdge(n_id, n_id + timestamps, Objective=alpha*norm(S,1))
-    print 'here2'    
+#    print 'here2'    
     t = time.time()
-    gvx.Solve( NumProcessors = 1, EpsAbs=epsAbs, EpsRel=epsRel , Verbose = True)
+    gvx.Solve( EpsAbs=epsAbs, EpsRel=epsRel )
+#    gvx.Solve( EpsAbs=epsAbs, EpsRel=epsRel ,NumProcessors = 1,  Verbose = True)
     end = time.time() - t
     print 'time span = ',end
     return gvx
@@ -308,7 +309,7 @@ def solveProblem(gvx, index_penalty, alpha, beta, empCov_set, epsAbs = 1e-4, eps
 def genGraph(S_actual, S_est, S_previous, empCov_set, nodeID, e1, e2, e3, e4, display = False):
     D   = np.where(S_est != 0)[0].shape[0]
     T   = np.where(S_actual != 0)[0].shape[0]
-    TandD = float(np.where(np.logical_and(S_actual,S_est) == True)[0].shape[0])
+    TandD = float(np.where(np.logical_and(S_actual,S_est) == True)[0].shape[0])m
     P   = TandD/D
     R   = TandD/T
     
@@ -377,6 +378,7 @@ if dataType == 'Stock':
 else:
     sample_set = genSampleSet(Cov_set, samplesPerStep, timestamps, timeShift)
     empCov_set = genEmpCov(sample_set, kernel_use, kernel_width, kernel_sigma)
+    empCov_set_naive = empCov_set
 
 e1_set = []
 e2_set = []

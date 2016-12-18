@@ -1120,11 +1120,12 @@ def ADMM_x(entry):
         numpymat = cvxpyMat.value
         n_t      = 1 # Assume number of samples is 1 at each node, need to be alterned alter
         # Iterate through all neighbors of the node
-        
+        print 'here 3-1'
         mat_shape = ( int( numpymat.shape[1] *  ( numpymat.shape[1]+1 )/2.0 ) ,)
         a = numpy.zeros(mat_shape) 
 #        print 'degree = ', entry[X_DEG]
-        for i in xrange(entry[X_DEG]):  # entry[X_DEG] = 3 if the node is neither first and the last one    
+        for i in xrange(entry[X_DEG]):  # entry[X_DEG] = 3 if the node is neither first and the last one   
+            print 'here 3-1-1' 
             z_index = X_NEIGHBORS + (2 * i)
             u_index = z_index + 1
             zi = entry[z_index]
@@ -1132,6 +1133,8 @@ def ADMM_x(entry):
             
             # Add norm for Variables corresponding to the node
             for (varID, varName, var, offset) in variables:
+                 
+                print 'here 3-1-1-1', 
                 z = getValue(edge_z_vals, zi + offset, var.size[0])
                 u = getValue(edge_u_vals, ui + offset, var.size[0])
                 a += (z-u) 
@@ -1144,15 +1147,18 @@ def ADMM_x(entry):
 #        x_var = X[numpy.triu_indices(numpymat.shape[1])] # extract upper triangular part as update variable      
 #        print 'x_update = ',x_var
 #        solution = numpy.matrix(x_var).T
+        print 'here3-2'
         x_update = Prox_logdet(numpymat, A, eta)
         solution = numpy.array(x_update).T.reshape(-1)
+        print 'here3-4'
         writeValue(node_vals, entry[X_IND] + variables[0][3], solution, variables[0][2].size[0]) 
+        print 'here3-4'
     else:
 #        print 'we are in the dummy node'
         x_update = [] # no variable to update for dummy node
     #-----------------------Proximal operator ---------------------------
 #    print 'end of proximal operator'
-
+# ssh youngsuk@madmax7.stanford.edu
 #
 #    #----------------------- Use CVXPY  -----------------------------
 #    # Iterate through all neighbors of the node

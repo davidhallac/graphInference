@@ -373,7 +373,7 @@ if dataType == 'Stock':
 #    sample_set_naive = sample_set_stock
 else:
     sample_set = genSampleSet(Cov_set, samplesPerStep, timestamps, timeShift)
-    empCov_set = genEmpCov(sample_set, use_kernel, kernel_width, kernel_sigma)
+    empCov_set = genEmpCov(sample_set, kernel_use, kernel_width, kernel_sigma)
 
 e1_set = []
 e2_set = []

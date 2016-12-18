@@ -1121,6 +1121,8 @@ def ADMM_x(entry):
         n_t      = 1 # Assume number of samples is 1 at each node, need to be alterned alter
         # Iterate through all neighbors of the node
         
+        
+        print int( numpymat.shape[1] *  ( numpymat.shape[1]+1 )/2.0 ),
         mat_shape = ( int( numpymat.shape[1] *  ( numpymat.shape[1]+1 )/2.0 ) ,)
         print mat_shape
         a = numpy.zeros(mat_shape) 

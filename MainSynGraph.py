@@ -391,14 +391,15 @@ AIC = []
 FroThetaDiff = []
 print 'number of samples per time: ', samplesPerStep
 
-print empCov_set
+#print empCov_set
 for alpha in alpha_set:
     for beta in beta_set:
-        print '--------------- alpha = %s, beta = %s ---------------'%(alpha, beta)
+        print '--------------------- alpha = %s, beta = %s --------------------'%(alpha, beta)
         gvx = TGraphVX()   
         gvx_naive = TGraphVX()
         gvx = solveProblem(gvx, index_penalty, alpha, beta, empCov_set, epsAbs, epsRel)
         if setLength == 1 and compare == True:
+            print 'solve naive problem'
             gvx_naive = solveProblem(gvx_naive, index_penalty, alpha, 0, empCov_set, epsAbs, epsRel) 
         e1 = []
         e2 = []

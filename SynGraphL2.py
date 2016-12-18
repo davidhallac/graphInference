@@ -108,7 +108,7 @@ if index_penalty == 1:
     from inferGraph1 import *
 elif index_penalty == 2:
     print 'Use l-2 penalty function'
-    from inferGraphL2 import *
+    from inferGraph2 import *
 elif index_penalty == 3:
     print 'Use laplacian penalty function'
     from inferGraph3 import *

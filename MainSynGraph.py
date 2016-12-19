@@ -30,7 +30,7 @@ def timing_set(center, samplesPerStep_left, count_left, samplesPerStep_right, co
     return time_set
     
 # Problem parameters
-size    = 10   
+size    = 5   
 timestamps = 100
 samplesPerStep = 10
 numberOfCov = 2
@@ -383,7 +383,10 @@ else:
     empCov_set = genEmpCov(sample_set, kernel_use, kernel_width, kernel_sigma)
     empCov_set_kernel = genEmpCov(sample_set, True, kernel_width, kernel_sigma)
     empCov_set_static = genEmpCov(sample_set, False, kernel_width, kernel_sigma)
-
+for i in range(5):
+    print empCov_set_static[i], empCov_set_kernel[i]
+    
+    
 e1_set = []
 e2_set = []
 e3_set = []

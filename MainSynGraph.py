@@ -228,7 +228,7 @@ def genEmpCov(sample_set, kernel_use, kernel_width = 1, kernel_sigma = 1):
             empCov = empCov + w*np.dot(X, X.T)/samplesPerStep
             w_sum  = w_sum + w
         empCov = empCov/w_sum
-        print 'w_sum is ', w_sum
+#        print 'w_sum is ', w_sum
         empCov_set.append(np.asarray(empCov))
     return empCov_set
     
@@ -384,8 +384,8 @@ else:
     empCov_set = genEmpCov(sample_set, kernel_use, kernel_width, kernel_sigma)
     empCov_set_kernel = genEmpCov(sample_set, True, kernel_width, kernel_sigma)
     empCov_set_static = genEmpCov(sample_set, False, kernel_width, kernel_sigma)
-for i in range(5):
-    print empCov_set_static[i], empCov_set_kernel[i]
+#for i in range(5):
+#    print empCov_set_static[i], empCov_set_kernel[i]
     
     
 e1_set = []

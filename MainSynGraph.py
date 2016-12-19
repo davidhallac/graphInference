@@ -33,7 +33,7 @@ def timing_set(center, samplesPerStep_left, count_left, samplesPerStep_right, co
 size    = 10
 timestamps = 100
 samplesPerStep = 10
-numberOfCov = 2
+numberOfCov = 4
 timeShift = int(np.ceil(float(timestamps)/numberOfCov)) #Number of steps till new covariance matrix appears
 eps     = 3e-3
 epsAbs  = 1e-3

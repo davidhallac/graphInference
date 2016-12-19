@@ -36,8 +36,8 @@ samplesPerStep = 10
 numberOfCov = 2
 timeShift = int(np.ceil(float(timestamps)/numberOfCov)) #Number of steps till new covariance matrix appears
 eps     = 3e-3
-epsAbs  = 1e-2
-epsRel  = 1e-2
+epsAbs  = 1e-3
+epsRel  = 1e-3
 
 # Choose a penalty function
 # 1: l1, 2: l2, 3: laplacian, 4: l-inf, 5: perturbation node penalty
@@ -69,9 +69,11 @@ if dataType == 'Stock':
 
 
 # Kernel parameters
-kernel_width = 10
-kernel_sigma = 1
-kernel_use = False
+kernel_width = 1 # kernel width for naive method and for TVGL under kernel usage
+# this kernel width is currently dummy because it is automatically decide!!
+
+kernel_sigma = 1 # kernel sigma for naive method and for TVGL under kernel usage
+kernel_use = False # True/False:  use/not use kernel for TVGL
 
 
 if setLength == 1:
@@ -209,6 +211,8 @@ def genEmpCov(sample_set, kernel_use = 'False', kernel_width = 1, kernel_sigma =
     samplesPerStep  = sample_set[0].shape[1]
     if kernel_use:
         kernel_width = np.ceil(np.power(timestamps, 1.0/3 ))
+    else:
+        kernel_width = 1
             
     for i in range(timestamps):
         # Generate or find the covariance matrix at i, for synthetic/real and kernel/non-kernel cases

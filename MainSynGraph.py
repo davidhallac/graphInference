@@ -525,8 +525,8 @@ print '\nave_PN:', np.mean(e2_set[ind][:49]),  np.mean(e2_set[ind][51:]), np.mea
 print '\nave_PN:', np.mean(e4_set[ind][:49]),  np.mean(e4_set[ind][51:]), np.mean(e4_set[ind])
 if setLength == 1 and compare == True:
     pl.subplot(311)     
-    pl.plot(x, e1_kernel, label = 'kernel')
-    pl.plot(x, e1_static, label = 'static')
+    pl.plot(x, e1_kernel, label = 'kernel', 'x')
+    pl.plot(x, e1_static, label = 'static', 'o')
     pl.subplot(312)
     pl.plot(x, e2_kernel)    
     pl.plot(x, e2_static)

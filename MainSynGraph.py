@@ -449,7 +449,7 @@ for alpha in alpha_set:
             if setLength == 1 and compare == True:               
                 val_kernel = gvx_kernel.GetNodeValue(nodeID,'S')
                 S_kernel = upper2Full(val_kernel, eps)
-                e1_kernel, e2_kernel, e3_kernel, e4_kernel = genGraph(S_actual, S_kerenl, S_kernel_previous, empCov_set_kernel, nodeID, e1_kernel, e2_kernel, e3_kernel, e4_kernel, False)
+                e1_kernel, e2_kernel, e3_kernel, e4_kernel = genGraph(S_actual, S_kernel, S_kernel_previous, empCov_set_kernel, nodeID, e1_kernel, e2_kernel, e3_kernel, e4_kernel, False)
                 S_kernel_previous =  S_kernel
                           
                 val_static = gvx_static.GetNodeValue(nodeID,'S')

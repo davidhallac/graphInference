@@ -206,24 +206,22 @@ def genSampleSet(Cov_set, samplesPerStep, timestamps, timeShift):
     return sample_set
 
 
-def genEmpCov(sample_set, kernel_use = 'False', kernel_width = 1, kernel_sigma = 1):
+def genEmpCov(sample_set, kernel_use, kernel_width = 1, kernel_sigma = 1):
     timestamps      = sample_set.__len__()
     samplesPerStep  = sample_set[0].shape[1]
     if kernel_use:
         kernel_width = np.ceil(np.power(timestamps, 1.0/3 ))
+        kernel_sigma = float(kernel_sigma)
     else:
         kernel_width = 1
-            
+    
+    print 'kernel_width is', kernel_width
     for i in range(timestamps):
-        # Generate or find the covariance matrix at i, for synthetic/real and kernel/non-kernel cases
-#        print '\n--------------- i = ',i, '\n-- w = ',
         w_sum = 0
         empCov = 0
         for j in range( int(max(0,i + 1 - kernel_width )),i + 1 ):
             w      = np.exp( -np.square(i- j) / kernel_sigma )
             m_tile = np.tile( np.mean(sample_set[j], axis = 1), (samplesPerStep,1) ).T
-    #         print 'j = ', j, 'K = ', K#, '\n', sample_set[j],'\n', mean_tile
-#            print w,
             X      = sample_set[j]- m_tile
             empCov = empCov + w*np.dot(X, X.T)/samplesPerStep
             w_sum  = w_sum + w
@@ -525,8 +523,8 @@ print '\nave_PN:', np.mean(e2_set[ind][:49]),  np.mean(e2_set[ind][51:]), np.mea
 print '\nave_PN:', np.mean(e4_set[ind][:49]),  np.mean(e4_set[ind][51:]), np.mean(e4_set[ind])
 if setLength == 1 and compare == True:
     pl.subplot(311)     
-    pl.plot(x, e1_kernel, '-', label = 'kernel')
-    pl.plot(x, e1_static, 'o', label = 'static')
+    pl.plot(x, e1_kernel, label = 'kernel')
+    pl.plot(x, e1_static, label = 'static')
     pl.subplot(312)
     pl.plot(x, e2_kernel)    
     pl.plot(x, e2_static)

@@ -72,7 +72,7 @@ if dataType == 'Stock':
 kernel_width = 1 # kernel width for naive method and for TVGL under kernel usage
 # this kernel width is currently dummy because it is automatically decide!!
 
-kernel_sigma = 1 # kernel sigma for naive method and for TVGL under kernel usage
+kernel_sigma = 10 # kernel sigma for naive method and for TVGL under kernel usage
 kernel_use = False # True/False:  use/not use kernel for TVGL
 
 
@@ -221,12 +221,13 @@ def genEmpCov(sample_set, kernel_use, kernel_width = 1, kernel_sigma = 1):
         empCov = 0
         for j in range( int(max(0,i + 1 - kernel_width )),i + 1 ):
             w      = np.exp( -np.square(i- j) / kernel_sigma )
+            print w,
             m_tile = np.tile( np.mean(sample_set[j], axis = 1), (samplesPerStep,1) ).T
             X      = sample_set[j]- m_tile
             empCov = empCov + w*np.dot(X, X.T)/samplesPerStep
             w_sum  = w_sum + w
         empCov = empCov/w_sum
-        #	print empCov
+        print 'w_sum is ', w_sum
         empCov_set.append(np.asarray(empCov))
     return empCov_set
     

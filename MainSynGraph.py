@@ -378,7 +378,7 @@ if dataType == 'Stock':
 else:
     sample_set = genSampleSet(Cov_set, samplesPerStep, timestamps, timeShift)
     empCov_set = genEmpCov(sample_set, kernel_use, kernel_width, kernel_sigma)
-    empCov_set_naive = empCov_set
+    empCov_set_naive = genEmpCov(sample_set, True, kernel_width, kernel_sigma)
 
 e1_set = []
 e2_set = []
@@ -457,7 +457,19 @@ ind = index3
 alpha = alpha_set[index31]
 beta =  beta_set[index32]
 #try:
+    
 x =  range(1,timestamps+1)
+np.savetxt('alpha.csv', alpha)    
+np.savetxt('beta.csv' , beta)    
+np.savetxt('x.csv'  , x)
+np.savetxt('e1.csv' , e1_set[ind])    
+np.savetxt('e2.csv' , e2_set[ind])    
+np.savetxt('e4.csv' , e4_set[ind])     
+np.savetxt('e11.csv', e11)    
+np.savetxt('e21.csv', e21)    
+np.savetxt('e41.csv', e41)    
+
+    
 if dataType == 'Syn':
     ax1 = pl.subplot(311)    
 #    pl.title(r'Results for Global Shift with $\ell_2$ Penalty')

@@ -36,8 +36,8 @@ samplesPerStep = 10
 numberOfCov = 2
 timeShift = int(np.ceil(float(timestamps)/numberOfCov)) #Number of steps till new covariance matrix appears
 eps     = 3e-3
-epsAbs  = 1e-3
-epsRel  = 1e-3
+epsAbs  = 1e-2
+epsRel  = 1e-2
 
 # Choose a penalty function
 # 1: l1, 2: l2, 3: laplacian, 4: l-inf, 5: perturbation node penalty

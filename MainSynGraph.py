@@ -458,10 +458,10 @@ alpha = alpha_set[index31]
 beta =  beta_set[index32]
 #try:
     
-x =  range(1,timestamps+1)
-np.savetxt('alpha.csv', alpha)    
-np.savetxt('beta.csv' , beta)    
+x =  range(1,timestamps+1)  
 np.savetxt('x.csv'  , x)
+np.savetxt('alpha.csv', alpha)    
+np.savetxt('beta.csv' , beta)  
 np.savetxt('e1.csv' , e1_set[ind])    
 np.savetxt('e2.csv' , e2_set[ind])    
 np.savetxt('e4.csv' , e4_set[ind])     

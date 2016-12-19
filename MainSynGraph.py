@@ -7,7 +7,7 @@ import numpy as np
 import numpy.linalg as alg
 import scipy as spy
 
-import matplotlib as mpl
+#import matplotlib as mpl
 import matplotlib.pylab as pl
 import time
  
@@ -56,7 +56,7 @@ setLength   = 1      # setLength = 1 indicates of using a fixed alpha/beta
 
 # Covariance matrix parameters
 dataType= 'Syn'
-cov_mode = 2 # 1,2,4: normal cov, 3: cov for laplacian, 5: perturbation 
+cov_mode = index_penalty # 1,2,4: normal cov, 3: cov for laplacian, 5: perturbation 
 low     = 0.3
 upper   = 0.6
 compare = True
@@ -362,12 +362,12 @@ if dataType == 'Syn':
         sentence = 'Synthetic data' + '_fixed'
     else:
         S_set, Cov_set = genMulCov(size, numberOfCov, low, upper, cov_mode)
-        sentence = dataType + '%s'%(cov_mode)
-    sentence = sentence + '(%s)'%(size)
+        sentence = dataType + 'with penalty/cov mode %s'%(cov_mode)
+    sentence = sentence + '(for the size of %s)'%(size)
 else:
     size, timesteps, sample_set_stock, empCov_set_stock = getStocks(time_set, stock_list,'finance.csv')
     sentence = data_type + '(%s)'%(size)
-print sentence
+print '********',sentence,'********'
 #print S_set
    
     

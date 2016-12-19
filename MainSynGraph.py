@@ -215,7 +215,8 @@ def genEmpCov(sample_set, kernel_use, kernel_width = 1, kernel_sigma = 1):
     else:
         kernel_width = 1
     
-    print 'kernel_width is', kernel_width
+#    print 'kernel_width is', kernel_width
+    empCov_set = []
     for i in range(timestamps):
         w_sum = 0
         empCov = 0

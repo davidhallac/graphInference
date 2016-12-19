@@ -382,17 +382,23 @@ if dataType == 'Stock':
 else:
     sample_set = genSampleSet(Cov_set, samplesPerStep, timestamps, timeShift)
     empCov_set = genEmpCov(sample_set, kernel_use, kernel_width, kernel_sigma)
-    empCov_set_naive = genEmpCov(sample_set, True, kernel_width, kernel_sigma)
+    empCov_set_kernel = genEmpCov(sample_set, True, kernel_width, kernel_sigma)
+    empCov_set_static = genEmpCov(sample_set, False, kernel_width, kernel_sigma)
 
 e1_set = []
 e2_set = []
 e3_set = []
 e4_set = []
-e11 = []
-e21 = []   
-e31 = []   
-e41 = []   
-e51 = []   
+e1_kernel = []
+e2_kernel = []   
+e3_kernel = []   
+e4_kernel = []   
+e5_kernel = []   
+e1_static = []
+e2_static = []   
+e3_static = []   
+e4_static = []   
+e5_static = []   
 
 FroError = []
 Score = []
@@ -405,18 +411,24 @@ for alpha in alpha_set:
     for beta in beta_set:
         print '--------------------- alpha = %s, beta = %s --------------------'%(alpha, beta)
         gvx = TGraphVX()   
-        gvx_naive = TGraphVX()
+        gvx_kernel = TGraphVX()
+        gvx_static = TGraphVX()
+
 #        print 'solve gvx'
         gvx = solveProblem(gvx, index_penalty, alpha, beta, empCov_set, epsAbs, epsRel)
         if setLength == 1 and compare == True:
 #            print 'solve naive gvx'
-            gvx_naive = solveProblem(gvx_naive, index_penalty, alpha, 0, empCov_set, epsAbs, epsRel) 
+            gvx_kernel = solveProblem(gvx_kernel, index_penalty, alpha, 0, empCov_set_kernel, epsAbs, epsRel) 
+            gvx_static = solveProblem(gvx_static, index_penalty, alpha, 0, empCov_set_static, epsAbs, epsRel) 
+
         e1 = []
         e2 = []
         e3 = []
         e4 = []
         S_previous = np.zeros((size,size))
-        S_naive_previous = np.zeros((size,size))
+        S_kernel_previous = np.zeros((size,size))
+        S_static_previous = np.zeros((size,size))
+
         for nodeID in range(timestamps):
             val = gvx.GetNodeValue(nodeID,'S')
             S_est = upper2Full(val, eps)
@@ -435,11 +447,15 @@ for alpha in alpha_set:
             S_previous = S_est
             
             if setLength == 1 and compare == True:               
-                val_naive = gvx_naive.GetNodeValue(nodeID,'S')
-                S_naive = upper2Full(val_naive, eps)
-                
-                e11, e21, e31, e41 = genGraph(S_actual, S_naive, S_naive_previous, empCov_set_naive, nodeID, e11, e21, e31, e41, False)
-                S_naive_previous =  S_naive
+                val_kernel = gvx_kernel.GetNodeValue(nodeID,'S')
+                S_kernel = upper2Full(val_kernel, eps)
+                e1_kernel, e2_kernel, e3_kernel, e4_kernel = genGraph(S_actual, S_kerenl, S_kernel_previous, empCov_set_kernel, nodeID, e1_kernel, e2_kernel, e3_kernel, e4_kernel, False)
+                S_kernel_previous =  S_kernel
+                          
+                val_static = gvx_static.GetNodeValue(nodeID,'S')
+                S_static = upper2Full(val_static, eps)
+                e1_static, e2_static, e3_static, e4_static = genGraph(S_actual, S_static, S_static_previous, empCov_set_static, nodeID, e1_static, e2_static, e3_static, e4_static, False)
+                S_static_previous =  S_static
             
             
         e1_set.append(e1)
@@ -463,26 +479,26 @@ beta =  beta_set[index32]
 #try:
 #print alpha
 x =  range(1,timestamps+1)  
-np.savetxt('x.csv'  , x)
-#np.savetxt('alpha.csv', alpha)    
-#np.savetxt('beta.csv' , beta)  
-np.savetxt('e1.csv' , e1_set[ind])    
-np.savetxt('e2.csv' , e2_set[ind])    
-np.savetxt('e4.csv' , e4_set[ind])     
-np.savetxt('e11.csv', e11)    
-np.savetxt('e21.csv', e21)    
-np.savetxt('e41.csv', e41)    
+#np.savetxt('x.csv'  , x)
+##np.savetxt('alpha.csv', alpha)    
+##np.savetxt('beta.csv' , beta)  
+#np.savetxt('e1.csv' , e1_set[ind])    
+#np.savetxt('e2.csv' , e2_set[ind])    
+#np.savetxt('e4.csv' , e4_set[ind])     
+#np.savetxt('e11.csv', e1_kernel)    
+#np.savetxt('e21.csv', e2_kernel)    
+#np.savetxt('e41.csv', e4_kernel)    
 
     
 if dataType == 'Syn':
     ax1 = pl.subplot(311)    
-#    pl.title(r'Results for Global Shift with $\ell_2$ Penalty')
+    pl.title(r'Results for Global Shift with $\ell_2$ Penalty')
     pl.plot(x, e1_set[ind])
-#    pl.yticks([0.8,1.0,1.2,1.4])
-#    pl.axvline(x=51,color='r',ls='dashed')
-#    pl.ylim([0.65,1.45])
-#    pl.ylabel('Abs. Error')
-#    ax1.set_xticklabels([])
+    pl.yticks([0.8,1.0,1.2,1.4])
+    pl.axvline(x=51,color='r',ls='dashed')
+    pl.ylim([0.65,1.45])
+    pl.ylabel('Abs. Error')
+    ax1.set_xticklabels([])
     
     ax2 = pl.subplot(312)
     pl.plot(x, e2_set[ind])
@@ -509,17 +525,27 @@ print '\nave_PN:', np.mean(e2_set[ind][:49]),  np.mean(e2_set[ind][51:]), np.mea
 print '\nave_PN:', np.mean(e4_set[ind][:49]),  np.mean(e4_set[ind][51:]), np.mean(e4_set[ind])
 if setLength == 1 and compare == True:
     pl.subplot(311)     
-    pl.plot(x, e11, label = 'zero beta')
+    pl.plot(x, e1_kernel, label = 'kernel')
+    pl.plot(x, e1_static, label = 'static')
     pl.subplot(312)
-    pl.plot(x, e21)
+    pl.plot(x, e2_kernel)    
+    pl.plot(x, e2_static)
+
     pl.subplot(313)
-    david2, = pl.semilogy(x, e41)
+    david2, = pl.semilogy(x, e4_kernel)
+    david2, = pl.semilogy(x, e4_static)
     pl.rc('legend',**{'fontsize':14})
     david3 = pl.legend([david1,david2],['TVGL','Baseline'], ncol=2, loc=7, bbox_to_anchor=(1,0.57), columnspacing=0.4) 
-    david3.draw_frame(False)   
-    print '\nave_Naive:', np.mean(e11)
-    print '\nave_Naive:', np.mean(e21)
-    print '\nave_Naive:', np.mean(e41)
+    david3.draw_frame(False)  
+    print '--------- Kernel method -------'
+    print 'Abs err  :', np.mean(e1_kernel)
+    print 'F1 score :', np.mean(e2_kernel)
+    print 'Temp Dev :', np.mean(e4_kernel)
+    
+    print '--------- Static method -------'
+    print 'Abs err  :', np.mean(e1_static)
+    print 'F1 score :', np.mean(e2_static)
+    print 'Temp Dev :', np.mean(e4_static)
 Data_type = dataType + '%s'%(cov_mode) + '%s'%(samplesPerStep)
 pl.savefig(Data_type)
 pl.savefig(Data_type+'.eps', format = 'eps', bbox_inches = 'tight', dpi = 1000)

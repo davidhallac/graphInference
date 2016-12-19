@@ -45,7 +45,7 @@ index_penalty = 2
 
 
 # Choose the number of alpha/beta point 
-setLength   = 1      # set_length = 1 indicates of using a fixed alpha/beta
+setLength   = 1      # setLength = 1 indicates of using a fixed alpha/beta
 
 # Parameters for l2 penalty
 
@@ -245,7 +245,7 @@ def getStocks(time_set, stock_list, data):
     return size, timesteps, sample_data_set, empCov_set
     
 
-def indicesOfExtremeValue(arr, set_length, choice):
+def indicesOfExtremeValue(arr, setLength, choice):
     if (choice == 'max'):
         index = np.argmax(arr)
     elif (choice == 'min'):
@@ -253,8 +253,8 @@ def indicesOfExtremeValue(arr, set_length, choice):
     else:
         print 'invalid argument, choose max or min'
             
-    index_x = index/set_length
-    index_y = index - (index_x)*set_length
+    index_x = index/setLength
+    index_y = index - (index_x)*setLength
     return index, index_x, index_y
     
 def upper2Full(a, eps = 0):
@@ -448,10 +448,10 @@ for alpha in alpha_set:
         AIC.append(sum(e3))
         FroThetaDiff.append(sum(e4))
         
-index1, index11, index12 = indicesOfExtremeValue(FroError, set_length, 'min')
-index2, index21, index22 = indicesOfExtremeValue(Score, set_length, 'max')
-index3, index31, index32 = indicesOfExtremeValue(AIC, set_length, 'min')
-index4, index41, index42 = indicesOfExtremeValue(FroThetaDiff, set_length, 'min')      
+index1, index11, index12 = indicesOfExtremeValue(FroError, setLength, 'min')
+index2, index21, index22 = indicesOfExtremeValue(Score, setLength, 'max')
+index3, index31, index32 = indicesOfExtremeValue(AIC, setLength, 'min')
+index4, index41, index42 = indicesOfExtremeValue(FroThetaDiff, setLength, 'min')      
 
 ind = index3
 alpha = alpha_set[index31]
@@ -479,7 +479,7 @@ if dataType == 'Syn':
 else:
     pl.subplot(311)    
     pl.plot(x, e1_set[ind])
-    pl.title(r'%s, $n_t$ = %s, ($\lambda$, $\beta$) = (%s, %s)'%(Data_type, samplesPerStep, alpha, beta))
+    pl.title(r'%s, $n_t$ = %s, ($\lambda$, $\beta$) = (%s, %s)'%(sentence, samplesPerStep, alpha, beta))
 
 ax3 = pl.subplot(313)
 david1, = pl.semilogy(x, e4_set[ind])
@@ -491,9 +491,9 @@ pl.rcParams.update({'font.size':14})
 print '\nave_PN:', np.mean(e1_set[ind][:49]),  np.mean(e1_set[ind][51:]), np.mean(e1_set[ind])
 print '\nave_PN:', np.mean(e2_set[ind][:49]),  np.mean(e2_set[ind][51:]), np.mean(e2_set[ind])
 print '\nave_PN:', np.mean(e4_set[ind][:49]),  np.mean(e4_set[ind][51:]), np.mean(e4_set[ind])
-if set_length == 1 and compare == True:
+if setLength == 1 and compare == True:
     pl.subplot(311)     
-    pl.plot(x, e11, label = comp_with)
+    pl.plot(x, e11, label = 'zero beta')
     pl.subplot(312)
     pl.plot(x, e21)
     pl.subplot(313)
@@ -504,61 +504,61 @@ if set_length == 1 and compare == True:
     print '\nave_Naive:', np.mean(e11)
     print '\nave_Naive:', np.mean(e21)
     print '\nave_Naive:', np.mean(e41)
-Data_type = cov_mode + '%s'%(cov_mode_number) + '%s'%(samplesPerStep)
+Data_type = dataType + '%s'%(cov_mode) + '%s'%(samplesPerStep)
 pl.savefig(Data_type)
 pl.savefig(Data_type+'.eps', format = 'eps', bbox_inches = 'tight', dpi = 1000)
 pl.show()
-if set_length > 1:
-    #print index1, index11, index12, index2, index21, index22
-    print 'alpha = ', alpha_set[index11], ' beta = ', beta_set[index12], ' FroError = ', FroError[index1]
-    print 'alpha = ', alpha_set[index21], ' beta = ', beta_set[index22], ' Score = ', Score[index2]
-    print 'alpha = ', alpha_set[index31], ' beta = ', beta_set[index32], ' AIC = ', AIC[index3]
-    print 'alpha = ', alpha_set[index41], ' beta = ', beta_set[index42], ' FroThetaDiff = ', FroThetaDiff[index4]
-    
-    Fro_error = numpy.reshape(FroError,(set_length, set_length))
-    Score = numpy.reshape(Score,(set_length, set_length))
-    AIC = numpy.reshape(AIC,(set_length, set_length))
-    FroThetaDiff = numpy.reshape(FroThetaDiff,(set_length, set_length))
-    np.savez('ErrorMeasure%s'%(set_length), size = size, timesteps = timesteps, numberOfCov = numberOfCov,
-             alpha_set = alpha_set, beta_set = beta_set, S_set = S_set, 
-             Fro_error = Fro_error, Score = Score, AIC =  AIC, FroThetaDiff=  FroThetaDiff,
-             e1_set = e1_set, e2_set = e2_set, e3_set = e3_set, e4_set = e4_set)
-    np.savez('OptPars%s'%(set_length), size = size, timesteps = timesteps, numberOfCov = numberOfCov,
-             alpha_fro = alpha_set[index11], beta_fro = beta_set[index11], 
-             alpha_score = alpha_set[index21], beta_score = beta_set[index22], 
-             alpha_AIC = alpha_set[index31], beta_AIC = beta_set[index31], 
-             alpha_theta = alpha_set[index41], beta_theta = beta_set[index42])
-    
-    Y, X =  np.meshgrid(alpha_set, beta_set)
-#    pl.figure(1)
-    try:
-        pl.subplot(221)
-        pl.contourf(X, Y, Score)
-        pl.ylabel(r'$\alpha$')
-        pl.xlabel(r'$\beta$')
-        pl.colorbar()
-        pl.title('Score')
-        pl.subplot(222)
-        pl.contourf(X, Y, Fro_error)
-        pl.ylabel(r'$\alpha$')
-        pl.xlabel(r'$\beta$')
-        pl.title(r'$S_{true} - S_{est}$')
-        pl.colorbar()
-        pl.subplot(223)
-        pl.contourf(X, Y, AIC)
-        pl.ylabel(r'$\alpha$')
-        pl.xlabel(r'$\beta$')
-        pl.title('AIC')
-        pl.colorbar()
-        pl.subplot(224)
-        pl.contourf(X, Y, FroThetaDiff)
-        pl.ylabel(r'$\alpha$')
-        pl.xlabel(r'$\beta$')
-        pl.title(r'$S_i - S_{i+1}$')
-        pl.colorbar()
-        pl.savefig('GridGraph%s'%(set_length))
-        pl.show()
-        print ('\nSuceed to save GridGraph%s'%(set_length))
-    except:
-        print 'fail to save graph'
+#if setLength > 1:
+#    #print index1, index11, index12, index2, index21, index22
+#    print 'alpha = ', alpha_set[index11], ' beta = ', beta_set[index12], ' FroError = ', FroError[index1]
+#    print 'alpha = ', alpha_set[index21], ' beta = ', beta_set[index22], ' Score = ', Score[index2]
+#    print 'alpha = ', alpha_set[index31], ' beta = ', beta_set[index32], ' AIC = ', AIC[index3]
+#    print 'alpha = ', alpha_set[index41], ' beta = ', beta_set[index42], ' FroThetaDiff = ', FroThetaDiff[index4]
+#    
+#    Fro_error = np.reshape(FroError,(setLength, setLength))
+#    Score = np.reshape(Score,(setLength, setLength))
+#    AIC = np.reshape(AIC,(setLength, setLength))
+#    FroThetaDiff = np.reshape(FroThetaDiff,(setLength, setLength))
+#    np.savez('ErrorMeasure%s'%(setLength), size = size, timesteps = timesteps, numberOfCov = numberOfCov,
+#             alpha_set = alpha_set, beta_set = beta_set, S_set = S_set, 
+#             Fro_error = Fro_error, Score = Score, AIC =  AIC, FroThetaDiff=  FroThetaDiff,
+#             e1_set = e1_set, e2_set = e2_set, e3_set = e3_set, e4_set = e4_set)
+#    np.savez('OptPars%s'%(setLength), size = size, timesteps = timesteps, numberOfCov = numberOfCov,
+#             alpha_fro = alpha_set[index11], beta_fro = beta_set[index11], 
+#             alpha_score = alpha_set[index21], beta_score = beta_set[index22], 
+#             alpha_AIC = alpha_set[index31], beta_AIC = beta_set[index31], 
+#             alpha_theta = alpha_set[index41], beta_theta = beta_set[index42])
+#    
+#    Y, X =  np.meshgrid(alpha_set, beta_set)
+##    pl.figure(1)
+#    try:
+#        pl.subplot(221)
+#        pl.contourf(X, Y, Score)
+#        pl.ylabel(r'$\alpha$')
+#        pl.xlabel(r'$\beta$')
+#        pl.colorbar()
+#        pl.title('Score')
+#        pl.subplot(222)
+#        pl.contourf(X, Y, Fro_error)
+#        pl.ylabel(r'$\alpha$')
+#        pl.xlabel(r'$\beta$')
+#        pl.title(r'$S_{true} - S_{est}$')
+#        pl.colorbar()
+#        pl.subplot(223)
+#        pl.contourf(X, Y, AIC)
+#        pl.ylabel(r'$\alpha$')
+#        pl.xlabel(r'$\beta$')
+#        pl.title('AIC')
+#        pl.colorbar()
+#        pl.subplot(224)
+#        pl.contourf(X, Y, FroThetaDiff)
+#        pl.ylabel(r'$\alpha$')
+#        pl.xlabel(r'$\beta$')
+#        pl.title(r'$S_i - S_{i+1}$')
+#        pl.colorbar()
+#        pl.savefig('GridGraph%s'%(setLength))
+#        pl.show()
+#        print ('\nSuceed to save GridGraph%s'%(setLength))
+#    except:
+#        print 'fail to save graph'
 print '\nEnd'

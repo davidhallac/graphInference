@@ -30,7 +30,7 @@ def timing_set(center, samplesPerStep_left, count_left, samplesPerStep_right, co
     return time_set
     
 # Problem parameters
-size    = 5   
+size    = 10
 timestamps = 100
 samplesPerStep = 10
 numberOfCov = 2
@@ -222,7 +222,7 @@ def genEmpCov(sample_set, kernel_use, kernel_width = 1, kernel_sigma = 1):
         empCov = 0
         for j in range( int(max(0,i + 1 - kernel_width )),i + 1 ):
             w      = np.exp( -np.square(i- j) / kernel_sigma )
-            print w,
+#            print w,
             m_tile = np.tile( np.mean(sample_set[j], axis = 1), (samplesPerStep,1) ).T
             X      = sample_set[j]- m_tile
             empCov = empCov + w*np.dot(X, X.T)/samplesPerStep

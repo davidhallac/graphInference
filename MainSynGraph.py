@@ -35,9 +35,9 @@ timestamps = 100
 samplesPerStep = 10
 numberOfCov = 2
 timeShift = int(np.ceil(float(timestamps)/numberOfCov)) #Number of steps till new covariance matrix appears
-eps     = 3e-3
-epsAbs  = 1e-3
-epsRel  = 1e-3
+eps     = 1e-3
+epsAbs  = 1e-4
+epsRel  = 1e-4
 
 # Choose a penalty function
 # 1: l1, 2: l2, 3: laplacian, 4: l-inf, 5: perturbation node penalty
@@ -72,7 +72,7 @@ if dataType == 'Stock':
 kernel_width = 1 # kernel width for naive method and for TVGL under kernel usage
 # this kernel width is currently dummy because it is automatically decide!!
 
-kernel_sigma = 10 # kernel sigma for naive method and for TVGL under kernel usage
+kernel_sigma = 1 # kernel sigma for naive method and for TVGL under kernel usage
 kernel_use = False # True/False:  use/not use kernel for TVGL
 
 
@@ -85,7 +85,7 @@ if setLength == 1:
 #        beta_set  = [7.0] # kernel_width
     if dataType == 'Syn': # Parameters for penalty function
         alpha_set   = [0.3]
-        beta_set    = [9]
+        beta_set    = [7]
     elif dataType == 'Stock':
         alpha_set   = [0.27] # apple case and flash crash
         beta_set    = [10]  # apple case

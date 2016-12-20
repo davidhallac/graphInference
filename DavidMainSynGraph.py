@@ -526,7 +526,7 @@ if dataType == 'Syn':
     pl.yticks([0.0,0.2,0.4,0.6,0.8,1.0])
     pl.axvline(x=51,color='r',ls='dashed')
     pl.ylim([0.0,1.0])
-    pl.ylabel(r'$F_1$')
+    pl.ylabel(r'$F_1$ Score')
     ax2.set_xticklabels([])
     
 else:
@@ -559,6 +559,7 @@ if setLength == 1 and compare == True:
     david2, = pl.semilogy(x, e4_kernel)
     david4, = pl.semilogy(x, e4_static)
     pl.rc('legend',**{'fontsize':14})
+    pl.ylim([0.001, 10])
  
     # david3.draw_frame(False)  
     print '--------- Kernel method -------'

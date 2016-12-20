@@ -72,7 +72,7 @@ if dataType == 'Stock':
 kernel_width = 1 # kernel width for naive method and for TVGL under kernel usage
 # this kernel width is currently dummy because it is automatically decide!!
 
-kernel_sigma = 1 # kernel sigma for naive method and for TVGL under kernel usage
+kernel_sigma = 30 # kernel sigma for naive method and for TVGL under kernel usage
 kernel_use = False # True/False:  use/not use kernel for TVGL
 
 
@@ -85,7 +85,7 @@ if setLength == 1:
 #        beta_set  = [7.0] # kernel_width
     if dataType == 'Syn': # Parameters for penalty function
         alpha_set   = [0.3]
-        beta_set    = [7]
+        beta_set    = [8]
     elif dataType == 'Stock':
         alpha_set   = [0.27] # apple case and flash crash
         beta_set    = [10]  # apple case
@@ -495,10 +495,14 @@ np.savetxt('e1_static.csv', e1_static)
 np.savetxt('e2_static.csv', e2_static)    
 np.savetxt('e4_static.csv', e4_static)     
 
-    
+title_sentence = ''
+if index_penalty == 2:
+    title_sentence = r'Results for Global Shift with $\ell_2$ Penalty'
+elif index_penalty == 5:
+    title_sentence = 'Results for Local Shift with Perturbed Node Penalty'
 if dataType == 'Syn':
     ax1 = pl.subplot(311)    
-    pl.title(r'Results for Global Shift with $\ell_2$ Penalty')
+    pl.title(title_sentence)
     pl.plot(x, e1_set[ind])
     pl.yticks([0.8,1.0,1.2,1.4])
     pl.axvline(x=51,color='r',ls='dashed')

@@ -72,7 +72,7 @@ if dataType == 'Stock':
 kernel_width = 1 # kernel width for naive method and for TVGL under kernel usage
 # this kernel width is currently dummy because it is automatically decide!!
 
-kernel_sigma = 30 # kernel sigma for naive method and for TVGL under kernel usage
+kernel_sigma = 10 # kernel sigma for naive method and for TVGL under kernel usage
 kernel_use = False # True/False:  use/not use kernel for TVGL
 
 

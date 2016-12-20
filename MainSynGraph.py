@@ -35,7 +35,7 @@ timestamps = 100
 samplesPerStep = 10
 numberOfCov = 2
 timeShift = int(np.ceil(float(timestamps)/numberOfCov)) #Number of steps till new covariance matrix appears
-eps     = 1e-3
+eps     = 1e-2
 epsAbs  = 1e-4
 epsRel  = 1e-4
 
@@ -302,7 +302,7 @@ def solveProblem(gvx, index_penalty, alpha, beta, empCov_set, epsAbs = 1e-4, eps
         gvx.AddEdge(n_id, n_id + timestamps, Objective=alpha*norm(S,1))
 #    print 'here2'    
     t = time.time()
-    gvx.Solve( EpsAbs=epsAbs, EpsRel=epsRel )
+    gvx.Solve( EpsAbs=epsAbs, EpsRel=epsRel, MaxIters = 1000 )
 #    gvx.Solve( EpsAbs=epsAbs, EpsRel=epsRel ,NumProcessors = 1,  Verbose = True)
     end = time.time() - t
     print 'time span = ',end
@@ -482,15 +482,18 @@ beta =  beta_set[index32]
 #try:
 #print alpha
 x =  range(1,timestamps+1)  
-#np.savetxt('x.csv'  , x)
-##np.savetxt('alpha.csv', alpha)    
-##np.savetxt('beta.csv' , beta)  
-#np.savetxt('e1.csv' , e1_set[ind])    
-#np.savetxt('e2.csv' , e2_set[ind])    
-#np.savetxt('e4.csv' , e4_set[ind])     
-#np.savetxt('e11.csv', e1_kernel)    
-#np.savetxt('e21.csv', e2_kernel)    
-#np.savetxt('e41.csv', e4_kernel)    
+np.savetxt('x.csv'  , x)
+#np.savetxt('alpha.csv', alpha)    
+#np.savetxt('beta.csv' , beta)  
+np.savetxt('e1.csv' , e1_set[ind])    
+np.savetxt('e2.csv' , e2_set[ind])    
+np.savetxt('e4.csv' , e4_set[ind])     
+np.savetxt('e1_kernel.csv', e1_kernel)    
+np.savetxt('e2_kernel.csv', e2_kernel)    
+np.savetxt('e4_kernel.csv', e4_kernel)   
+np.savetxt('e1_static.csv', e1_static)    
+np.savetxt('e2_static.csv', e2_static)    
+np.savetxt('e4_static.csv', e4_static)     
 
     
 if dataType == 'Syn':

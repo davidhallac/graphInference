@@ -7,10 +7,11 @@ import numpy as np
 import numpy.linalg as alg
 import scipy as spy
 
-#import matplotlib as mpl
+import matplotlib as mpl
+mpl.use('Agg')
 import matplotlib.pylab as pl
 import time
- 
+import sys
 
 def timing_set(center, samplesPerStep_left, count_left, samplesPerStep_right, count_right ):
     time_set = []
@@ -41,7 +42,7 @@ epsRel  = 1e-4
 
 # Choose a penalty function
 # 1: l1, 2: l2, 3: laplacian, 4: l-inf, 5: perturbation node penalty
-index_penalty = 5
+index_penalty = int(sys.argv[2])
 
 
 # Choose the number of alpha/beta point 
@@ -56,7 +57,7 @@ setLength   = 1      # setLength = 1 indicates of using a fixed alpha/beta
 
 # Covariance matrix parameters
 dataType= 'Syn'
-cov_mode = index_penalty # 1,2,4: normal cov, 3: cov for laplacian, 5: perturbation 
+cov_mode = int(sys.argv[1]) # 1,2,4: normal cov, 3: cov for laplacian, 5: perturbation 
 low     = 0.3
 upper   = 0.6
 compare = True
@@ -362,7 +363,7 @@ if dataType == 'Syn':
         sentence = 'Synthetic data' + '_fixed'
     else:
         S_set, Cov_set = genMulCov(size, numberOfCov, low, upper, cov_mode)
-        sentence = dataType + ' with penalty/cov mode %s'%(cov_mode)
+        sentence = 'For synthetic data with %s type Cov, analyze with %s penalty function'%(cov_mode, index_penalty)
     sentence = sentence + ' (for %s size of square matrix)'%(size)
 else:
     size, timesteps, sample_set_stock, empCov_set_stock = getStocks(time_set, stock_list,'finance.csv')
@@ -504,7 +505,7 @@ if dataType == 'Syn':
     ax1 = pl.subplot(311)    
     pl.title(title_sentence)
     pl.plot(x, e1_set[ind])
-    pl.yticks([0.8,1.0,1.2,1.4])
+#    pl.yticks([0.8,1.0,1.2,1.4])
     pl.axvline(x=51,color='r',ls='dashed')
 #    pl.ylim([0.65,1.45])
     pl.ylabel('Abs. Error')
@@ -512,9 +513,9 @@ if dataType == 'Syn':
     
     ax2 = pl.subplot(312)
     pl.plot(x, e2_set[ind])
-    pl.yticks([0.4,0.6,0.8,1.0])
+#    pl.yticks([0.4,0.6,0.8,1.0])
     pl.axvline(x=51,color='r',ls='dashed')
-    pl.ylim([0.3,1.0])
+#    pl.ylim([0.3,1.0])
     pl.ylabel(r'$F_1$')
     ax2.set_xticklabels([])
     
@@ -530,9 +531,9 @@ pl.ylabel('Temp. Dev.')
 pl.xlabel('Timestamp')
 pl.rcParams.update({'font.size':14})
 
-print '\nave_PN:', np.mean(e1_set[ind]) # np.mean(e1_set[ind][:49]),  np.mean(e1_set[ind][51:]),
-print '\nave_PN:', np.mean(e2_set[ind]) # np.mean(e2_set[ind][:49]),  np.mean(e2_set[ind][51:]),
-print '\nave_PN:', np.mean(e4_set[ind]) # np.mean(e4_set[ind][:49]),  np.mean(e4_set[ind][51:]),
+print '\nAbs err :', np.mean(e1_set[ind]) # np.mean(e1_set[ind][:49]),  np.mean(e1_set[ind][51:]),
+print '\nF1 score:', np.mean(e2_set[ind]) # np.mean(e2_set[ind][:49]),  np.mean(e2_set[ind][51:]),
+print '\nTemp Dev:', np.mean(e4_set[ind]) # np.mean(e4_set[ind][:49]),  np.mean(e4_set[ind][51:]),
 if setLength == 1 and compare == True:
     pl.subplot(311)     
     pl.plot(x, e1_kernel, label = 'kernel')
@@ -556,7 +557,7 @@ if setLength == 1 and compare == True:
     print 'Abs err  :', np.mean(e1_static)
     print 'F1 score :', np.mean(e2_static)
     print 'Temp Dev :', np.mean(e4_static)
-Data_type = dataType + '%s'%(cov_mode) + '%s'%(samplesPerStep)
+Data_type = dataType + '_cov%s'%(cov_mode) + '_penalty%s'%(index_penalty)
 pl.savefig(Data_type)
 pl.savefig(Data_type+'.eps', format = 'eps', bbox_inches = 'tight', dpi = 1000)
 pl.show()

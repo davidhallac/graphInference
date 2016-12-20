@@ -33,11 +33,11 @@ def timing_set(center, samplesPerStep_left, count_left, samplesPerStep_right, co
 size    = 10
 timestamps = 100
 samplesPerStep = 10
-numberOfCov = 3
+numberOfCov = 2
 timeShift = int(np.ceil(float(timestamps)/numberOfCov)) #Number of steps till new covariance matrix appears
-eps     = 3e-3
-epsAbs  = 1e-3
-epsRel  = 1e-3
+eps     = 1e-2
+epsAbs  = 1e-4
+epsRel  = 1e-4
 
 # Choose a penalty function
 # 1: l1, 2: l2, 3: laplacian, 4: l-inf, 5: perturbation node penalty
@@ -72,7 +72,7 @@ if dataType == 'Stock':
 kernel_width = 1 # kernel width for naive method and for TVGL under kernel usage
 # this kernel width is currently dummy because it is automatically decide!!
 
-kernel_sigma = 10 # kernel sigma for naive method and for TVGL under kernel usage
+kernel_sigma = 30 # kernel sigma for naive method and for TVGL under kernel usage
 kernel_use = False # True/False:  use/not use kernel for TVGL
 
 
@@ -85,7 +85,7 @@ if setLength == 1:
 #        beta_set  = [7.0] # kernel_width
     if dataType == 'Syn': # Parameters for penalty function
         alpha_set   = [0.3]
-        beta_set    = [7]
+        beta_set    = [8]
     elif dataType == 'Stock':
         alpha_set   = [0.27] # apple case and flash crash
         beta_set    = [10]  # apple case
@@ -302,7 +302,7 @@ def solveProblem(gvx, index_penalty, alpha, beta, empCov_set, epsAbs = 1e-4, eps
         gvx.AddEdge(n_id, n_id + timestamps, Objective=alpha*norm(S,1))
 #    print 'here2'    
     t = time.time()
-    gvx.Solve( EpsAbs=epsAbs, EpsRel=epsRel )
+    gvx.Solve( EpsAbs=epsAbs, EpsRel=epsRel, MaxIters = 1000 )
 #    gvx.Solve( EpsAbs=epsAbs, EpsRel=epsRel ,NumProcessors = 1,  Verbose = True)
     end = time.time() - t
     print 'time span = ',end
@@ -482,20 +482,27 @@ beta =  beta_set[index32]
 #try:
 #print alpha
 x =  range(1,timestamps+1)  
-#np.savetxt('x.csv'  , x)
-##np.savetxt('alpha.csv', alpha)    
-##np.savetxt('beta.csv' , beta)  
-#np.savetxt('e1.csv' , e1_set[ind])    
-#np.savetxt('e2.csv' , e2_set[ind])    
-#np.savetxt('e4.csv' , e4_set[ind])     
-#np.savetxt('e11.csv', e1_kernel)    
-#np.savetxt('e21.csv', e2_kernel)    
-#np.savetxt('e41.csv', e4_kernel)    
+np.savetxt('x.csv'  , x)
+#np.savetxt('alpha.csv', alpha)    
+#np.savetxt('beta.csv' , beta)  
+np.savetxt('e1.csv' , e1_set[ind])    
+np.savetxt('e2.csv' , e2_set[ind])    
+np.savetxt('e4.csv' , e4_set[ind])     
+np.savetxt('e1_kernel.csv', e1_kernel)    
+np.savetxt('e2_kernel.csv', e2_kernel)    
+np.savetxt('e4_kernel.csv', e4_kernel)   
+np.savetxt('e1_static.csv', e1_static)    
+np.savetxt('e2_static.csv', e2_static)    
+np.savetxt('e4_static.csv', e4_static)     
 
-    
+title_sentence = ''
+if index_penalty == 2:
+    title_sentence = r'Results for Global Shift with $\ell_2$ Penalty'
+elif index_penalty == 5:
+    title_sentence = 'Results for Local Shift with Perturbed Node Penalty'
 if dataType == 'Syn':
     ax1 = pl.subplot(311)    
-    pl.title(r'Results for Global Shift with $\ell_2$ Penalty')
+    pl.title(title_sentence)
     pl.plot(x, e1_set[ind])
     pl.yticks([0.8,1.0,1.2,1.4])
     pl.axvline(x=51,color='r',ls='dashed')

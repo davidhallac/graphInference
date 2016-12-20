@@ -33,7 +33,7 @@ def timing_set(center, samplesPerStep_left, count_left, samplesPerStep_right, co
 size    = 10
 timestamps = 100
 samplesPerStep = 10
-numberOfCov = 4
+numberOfCov = 3
 timeShift = int(np.ceil(float(timestamps)/numberOfCov)) #Number of steps till new covariance matrix appears
 eps     = 3e-3
 epsAbs  = 1e-3
@@ -362,8 +362,8 @@ if dataType == 'Syn':
         sentence = 'Synthetic data' + '_fixed'
     else:
         S_set, Cov_set = genMulCov(size, numberOfCov, low, upper, cov_mode)
-        sentence = dataType + 'with penalty/cov mode %s'%(cov_mode)
-    sentence = sentence + '(for the size of %s)'%(size)
+        sentence = dataType + ' with penalty/cov mode %s'%(cov_mode)
+    sentence = sentence + ' (for %s size of square matrix)'%(size)
 else:
     size, timesteps, sample_set_stock, empCov_set_stock = getStocks(time_set, stock_list,'finance.csv')
     sentence = data_type + '(%s)'%(size)
@@ -499,7 +499,7 @@ if dataType == 'Syn':
     pl.plot(x, e1_set[ind])
     pl.yticks([0.8,1.0,1.2,1.4])
     pl.axvline(x=51,color='r',ls='dashed')
-    pl.ylim([0.65,1.45])
+#    pl.ylim([0.65,1.45])
     pl.ylabel('Abs. Error')
     ax1.set_xticklabels([])
     
@@ -523,9 +523,9 @@ pl.ylabel('Temp. Dev.')
 pl.xlabel('Timestamp')
 pl.rcParams.update({'font.size':14})
 
-print '\nave_PN:', np.mean(e1_set[ind][:49]),  np.mean(e1_set[ind][51:]), np.mean(e1_set[ind])
-print '\nave_PN:', np.mean(e2_set[ind][:49]),  np.mean(e2_set[ind][51:]), np.mean(e2_set[ind])
-print '\nave_PN:', np.mean(e4_set[ind][:49]),  np.mean(e4_set[ind][51:]), np.mean(e4_set[ind])
+print '\nave_PN:', np.mean(e1_set[ind]) # np.mean(e1_set[ind][:49]),  np.mean(e1_set[ind][51:]),
+print '\nave_PN:', np.mean(e2_set[ind]) # np.mean(e2_set[ind][:49]),  np.mean(e2_set[ind][51:]),
+print '\nave_PN:', np.mean(e4_set[ind]) # np.mean(e4_set[ind][:49]),  np.mean(e4_set[ind][51:]),
 if setLength == 1 and compare == True:
     pl.subplot(311)     
     pl.plot(x, e1_kernel, label = 'kernel')

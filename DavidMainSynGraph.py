@@ -540,7 +540,7 @@ pl.axvline(x=51,color='r',ls='dashed')
 pl.ylabel('Temporal Deviation')
 pl.xlabel('Timestamp')
 pl.rcParams.update({'font.size':14})
-
+ 
 print '\nave_PN:', np.mean(e1_set[ind]) # np.mean(e1_set[ind][:49]),  np.mean(e1_set[ind][51:]),
 print '\nave_PN:', np.mean(e2_set[ind]) # np.mean(e2_set[ind][:49]),  np.mean(e2_set[ind][51:]),
 print '\nave_PN:', np.mean(e4_set[ind]) # np.mean(e4_set[ind][:49]),  np.mean(e4_set[ind][51:]),

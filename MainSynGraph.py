@@ -33,7 +33,7 @@ def timing_set(center, samplesPerStep_left, count_left, samplesPerStep_right, co
 size    = 10
 timestamps = 100
 samplesPerStep = 10
-numberOfCov = 3
+numberOfCov = 2
 timeShift = int(np.ceil(float(timestamps)/numberOfCov)) #Number of steps till new covariance matrix appears
 eps     = 3e-3
 epsAbs  = 1e-3
@@ -85,7 +85,7 @@ if setLength == 1:
 #        beta_set  = [7.0] # kernel_width
     if dataType == 'Syn': # Parameters for penalty function
         alpha_set   = [0.3]
-        beta_set    = [7]
+        beta_set    = [9]
     elif dataType == 'Stock':
         alpha_set   = [0.27] # apple case and flash crash
         beta_set    = [10]  # apple case

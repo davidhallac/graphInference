@@ -302,7 +302,7 @@ def solveProblem(gvx, index_penalty, alpha, beta, empCov_set, epsAbs = 1e-4, eps
         gvx.AddEdge(n_id, n_id + timestamps, Objective=alpha*norm(S,1))
 #    print 'here2'    
     t = time.time()
-    gvx.Solve( EpsAbs=epsAbs, EpsRel=epsRel, Verbose=True, MaxIters=2000)
+    gvx.Solve( EpsAbs=epsAbs, EpsRel=epsRel, Verbose=True, MaxIters=2500)
 #    gvx.Solve( EpsAbs=epsAbs, EpsRel=epsRel ,NumProcessors = 1,  Verbose = True)
     end = time.time() - t
     print 'time span = ',end
@@ -495,7 +495,22 @@ np.savetxt('e1_static.csv', e1_static)
 np.savetxt('e2_static.csv', e2_static)    
 np.savetxt('e4_static.csv', e4_static)      
 
-    
+
+print 'ave_PN:', np.mean(e1_set[ind]) # np.mean(e1_set[ind][:49]),  np.mean(e1_set[ind][51:]),
+print 'ave_PN:', np.mean(e2_set[ind]) # np.mean(e2_set[ind][:49]),  np.mean(e2_set[ind][51:]),
+print 'ave_PN:', np.mean(e4_set[ind]) # np.mean(e4_set[ind][:49]),  np.mean(e4_set[ind][51:]),
+
+print '--------- Kernel method -------'
+print 'Abs err  :', np.mean(e1_kernel)
+print 'F1 score :', np.mean(e2_kernel)
+print 'Temp Dev :', np.mean(e4_kernel)
+
+print '--------- Static method -------'
+print 'Abs err  :', np.mean(e1_static)
+print 'F1 score :', np.mean(e2_static)
+print 'Temp Dev :', np.mean(e4_static)
+
+david1 = 0
 if dataType == 'Syn':
     # ax1 = pl.subplot(211)    
     pl.title(r'Results for Global Shift with $\ell_2$ Penalty')
@@ -507,7 +522,7 @@ if dataType == 'Syn':
 #     ax1.set_xticklabels([])
     
     ax2 = pl.subplot(211)
-    pl.plot(x, e2_set[ind])
+    david1, = pl.plot(x, e2_set[ind])
     pl.yticks([0.0,0.2,0.4,0.6,0.8,1.0])
     pl.axvline(x=51,color='r',ls='dashed')
     pl.ylim([0.0,1.0])
@@ -520,7 +535,7 @@ else:
     pl.title(r'%s, $n_t$ = %s, ($\lambda$, $\beta$) = (%s, %s)'%(sentence, samplesPerStep, alpha, beta))
 
 ax3 = pl.subplot(212)
-david1, = pl.semilogy(x, e4_set[ind])
+pl.semilogy(x, e4_set[ind])
 pl.axvline(x=51,color='r',ls='dashed')
 pl.ylabel('Temporal Deviation')
 pl.xlabel('Timestamp')
@@ -534,15 +549,18 @@ if setLength == 1 and compare == True:
     # pl.plot(x, e1_kernel, label = 'kernel')
     # pl.plot(x, e1_static, label = 'static')
     pl.subplot(211)
-    pl.plot(x, e2_kernel)    
-    pl.plot(x, e2_static)
+    david2, = pl.plot(x, e2_kernel)    
+    david4, = pl.plot(x, e2_static)
+    # david3 = pl.legend([david1,david2,david4],['TVGL','Kernel','Static GL'], ncol=3, loc=7, bbox_to_anchor=(1,0.57), columnspacing=0.4)
+    david3 = pl.legend([david1,david2,david4],['TVGL','Kernel','Static GL'], ncol=3, loc=4, columnspacing=0.4)
+    david3.draw_frame(False)
 
     pl.subplot(212)
     david2, = pl.semilogy(x, e4_kernel)
     david4, = pl.semilogy(x, e4_static)
     pl.rc('legend',**{'fontsize':14})
-    david3 = pl.legend([david1,david2,david4],['TVGL','Kernel','Static GL'], ncol=3, loc=7, bbox_to_anchor=(1,0.57), columnspacing=0.4) 
-    david3.draw_frame(False)  
+ 
+    # david3.draw_frame(False)  
     print '--------- Kernel method -------'
     print 'Abs err  :', np.mean(e1_kernel)
     print 'F1 score :', np.mean(e2_kernel)

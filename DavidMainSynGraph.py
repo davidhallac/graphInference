@@ -559,7 +559,7 @@ if setLength == 1 and compare == True:
     david2, = pl.semilogy(x, e4_kernel)
     david4, = pl.semilogy(x, e4_static)
     pl.rc('legend',**{'fontsize':14})
-    pl.ylim([0.001, 10])
+    pl.ylim([0.001, 10]) 
  
     # david3.draw_frame(False)  
     print '--------- Kernel method -------'

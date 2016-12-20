@@ -41,7 +41,7 @@ epsRel  = 1e-4
 
 # Choose a penalty function
 # 1: l1, 2: l2, 3: laplacian, 4: l-inf, 5: perturbation node penalty
-index_penalty = 2
+index_penalty = 5
 
 
 # Choose the number of alpha/beta point 

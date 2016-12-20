@@ -302,7 +302,7 @@ def solveProblem(gvx, index_penalty, alpha, beta, empCov_set, epsAbs = 1e-4, eps
         gvx.AddEdge(n_id, n_id + timestamps, Objective=alpha*norm(S,1))
 #    print 'here2'    
     t = time.time()
-    gvx.Solve( EpsAbs=epsAbs, EpsRel=epsRel, Verbose=True, MaxIters=10000)
+    gvx.Solve( EpsAbs=epsAbs, EpsRel=epsRel, Verbose=True, MaxIters=10)
 #    gvx.Solve( EpsAbs=epsAbs, EpsRel=epsRel ,NumProcessors = 1,  Verbose = True)
     end = time.time() - t
     print 'time span = ',end
@@ -559,7 +559,7 @@ if setLength == 1 and compare == True:
 Data_type = dataType + '%s'%(cov_mode) + '%s'%(samplesPerStep)
 pl.savefig(Data_type)
 pl.savefig(Data_type+'.eps', format = 'eps', bbox_inches = 'tight', dpi = 1000)
-pl.show()
+# pl.show()
 #if setLength > 1:
 #    #print index1, index11, index12, index2, index21, index22
 #    print 'alpha = ', alpha_set[index11], ' beta = ', beta_set[index12], ' FroError = ', FroError[index1]

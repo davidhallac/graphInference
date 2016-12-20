@@ -41,7 +41,7 @@ epsRel  = 1e-4
 
 # Choose a penalty function
 # 1: l1, 2: l2, 3: laplacian, 4: l-inf, 5: perturbation node penalty
-index_penalty = 2
+index_penalty = 5
 
 
 # Choose the number of alpha/beta point 
@@ -72,7 +72,7 @@ if dataType == 'Stock':
 kernel_width = 1 # kernel width for naive method and for TVGL under kernel usage
 # this kernel width is currently dummy because it is automatically decide!!
 
-kernel_sigma = 30 # kernel sigma for naive method and for TVGL under kernel usage
+kernel_sigma = 10 # kernel sigma for naive method and for TVGL under kernel usage
 kernel_use = False # True/False:  use/not use kernel for TVGL
 
 
@@ -302,7 +302,7 @@ def solveProblem(gvx, index_penalty, alpha, beta, empCov_set, epsAbs = 1e-4, eps
         gvx.AddEdge(n_id, n_id + timestamps, Objective=alpha*norm(S,1))
 #    print 'here2'    
     t = time.time()
-    gvx.Solve( EpsAbs=epsAbs, EpsRel=epsRel, MaxIters = 1000 )
+    gvx.Solve( EpsAbs=epsAbs, EpsRel=epsRel, MaxIters = 10, Verbose = True )
 #    gvx.Solve( EpsAbs=epsAbs, EpsRel=epsRel ,NumProcessors = 1,  Verbose = True)
     end = time.time() - t
     print 'time span = ',end

@@ -483,18 +483,18 @@ beta =  beta_set[index32]
 #try:
 #print alpha
 x =  range(1,timestamps+1)  
-np.savetxt('x.csv'  , x)
-#np.savetxt('alpha.csv', alpha)    
-#np.savetxt('beta.csv' , beta)  
-np.savetxt('e1.csv' , e1_set[ind])    
-np.savetxt('e2.csv' , e2_set[ind])    
-np.savetxt('e4.csv' , e4_set[ind])     
-np.savetxt('e1_kernel.csv', e1_kernel)    
-np.savetxt('e2_kernel.csv', e2_kernel)    
-np.savetxt('e4_kernel.csv', e4_kernel)   
-np.savetxt('e1_static.csv', e1_static)    
-np.savetxt('e2_static.csv', e2_static)    
-np.savetxt('e4_static.csv', e4_static)     
+# np.savetxt('x.csv'  , x)
+# #np.savetxt('alpha.csv', alpha)    
+# #np.savetxt('beta.csv' , beta)  
+# np.savetxt('e1.csv' , e1_set[ind])    
+# np.savetxt('e2.csv' , e2_set[ind])    
+# np.savetxt('e4.csv' , e4_set[ind])     
+# np.savetxt('e1_kernel.csv', e1_kernel)    
+# np.savetxt('e2_kernel.csv', e2_kernel)    
+# np.savetxt('e4_kernel.csv', e4_kernel)   
+# np.savetxt('e1_static.csv', e1_static)    
+# np.savetxt('e2_static.csv', e2_static)    
+# np.savetxt('e4_static.csv', e4_static)     
 
 title_sentence = ''
 if index_penalty == 2:

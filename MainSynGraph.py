@@ -86,7 +86,7 @@ if setLength == 1:
 #        beta_set  = [7.0] # kernel_width
     if dataType == 'Syn': # Parameters for penalty function
         alpha_set   = [0.3]
-        beta_set    = [8]
+        beta_set    = [10] # default value is 8
     elif dataType == 'Stock':
         alpha_set   = [0.27] # apple case and flash crash
         beta_set    = [10]  # apple case

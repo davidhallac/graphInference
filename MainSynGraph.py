@@ -86,7 +86,7 @@ if setLength == 1:
 #        beta_set  = [7.0] # kernel_width
     if dataType == 'Syn': # Parameters for penalty function
         alpha_set   = [0.3]
-        beta_set    = [10] # default value is 8
+        beta_set    = [7] # default value is 8
     elif dataType == 'Stock':
         alpha_set   = [0.27] # apple case and flash crash
         beta_set    = [10]  # apple case
@@ -534,6 +534,13 @@ pl.rcParams.update({'font.size':14})
 print '\nAbs err :', np.mean(e1_set[ind]) # np.mean(e1_set[ind][:49]),  np.mean(e1_set[ind][51:]),
 print '\nF1 score:', np.mean(e2_set[ind]) # np.mean(e2_set[ind][:49]),  np.mean(e2_set[ind][51:]),
 print '\nTemp Dev:', np.mean(e4_set[ind]) # np.mean(e4_set[ind][:49]),  np.mean(e4_set[ind][51:]),
+print '\nTemp Dev2:', float(e4_set[ind][50])/np.mean(e4_set[ind])
+if(e4_set[ind][50] == max(e4_set[ind])):
+    tmp2 = e4_set[ind].remove(max(e4_set[ind]))
+    print '\nTemp Dev3:', float(e4_set[ind][50])/max(tmp2)
+else:
+    print '\nTemp Dev3:', float(e4_set[ind][50])/max(e4_set[ind])
+
 if setLength == 1 and compare == True:
     pl.subplot(311)     
     pl.plot(x, e1_kernel, label = 'kernel')
@@ -552,11 +559,23 @@ if setLength == 1 and compare == True:
     print 'Abs err  :', np.mean(e1_kernel)
     print 'F1 score :', np.mean(e2_kernel)
     print 'Temp Dev :', np.mean(e4_kernel)
+    print 'Temp Dev2:', float(e4_kernel[50])/np.mean(e4_kernel)
+    if(e4_kernel[50] == max(e4_kernel)):
+        tmp2 = e4_kernel.remove(max(e4_kernel))
+        print '\nTemp Dev3:', float(e4_kernel[50])/max(tmp2)
+    else:
+        print '\nTemp Dev3:', float(e4_kernel[50])/max(e4_kernel)
     
     print '--------- Static method -------'
     print 'Abs err  :', np.mean(e1_static)
     print 'F1 score :', np.mean(e2_static)
     print 'Temp Dev :', np.mean(e4_static)
+    print 'Temp Dev2:', float(e4_static[50])/np.mean(e4_static)
+    if(e4_static[50] == max(e4_static)):
+        tmp2 = e4_static.remove(max(e4_static))
+        print '\nTemp Dev3:', float(e4_static[50])/max(tmp2)
+    else:
+        print '\nTemp Dev3:', float(e4_static[50])/max(e4_static)
 Data_type = dataType + '_cov%s'%(cov_mode) + '_penalty%s'%(index_penalty)
 pl.savefig(Data_type)
 pl.savefig(Data_type+'.eps', format = 'eps', bbox_inches = 'tight', dpi = 1000)

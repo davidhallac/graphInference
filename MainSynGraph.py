@@ -555,7 +555,7 @@ if setLength == 1 and compare == True:
     print 'F1 score :', np.mean(e2_kernel)
     print 'Temp Dev :', np.mean(e4_kernel)
 
-    kernel_width = np.ceil(np.power(timestamps, 1.0/3 ))
+    kernel_width = int(np.ceil(np.power(timestamps, 1.0/3 )) )
     e4_kernel = e4_kernel[kernel_width:]
     print 'Ratio 1  :', max(e4_kernel)/np.mean(e4_kernel) # np.mean(e4_set[ind][:49]),  np.mean(e4_set[ind][51:]),
     print 'Ratio 2  :', max(e4_kernel)/np.sort(e4_kernel)[::-1][1] # np.mean(e4_set[ind][:49]),  np.mean(e4_set[ind][51:]),

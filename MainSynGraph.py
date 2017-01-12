@@ -37,8 +37,8 @@ samplesPerStep = 10
 numberOfCov = 2
 timeShift = int(np.ceil(float(timestamps)/numberOfCov)) #Number of steps till new covariance matrix appears
 eps     = 1e-2
-epsAbs  = 1e-4
-epsRel  = 1e-4
+epsAbs  = 1e-2
+epsRel  = 1e-2
 
 # Choose a penalty function
 # 1: l1, 2: l2, 3: laplacian, 4: l-inf, 5: perturbation node penalty
@@ -566,12 +566,7 @@ if setLength == 1 and compare == True:
     print 'Ratio 1  :', max(e4_kernel)/np.mean(e4_kernel) # np.mean(e4_set[ind][:49]),  np.mean(e4_set[ind][51:]),
     print 'Ratio 2  :', max(e4_kernel)/np.sort(e4_kernel)[::-1][1] # np.mean(e4_set[ind][:49]),  np.mean(e4_set[ind][51:]),
 
-    print 'Temp Dev2:', float(e4_kernel[50])/np.mean(e4_kernel)
-    if(e4_kernel[50] == max(e4_kernel)):
-        tmp2 = e4_kernel.remove(max(e4_kernel))
-        print '\nTemp Dev3:', float(e4_kernel[50])/max(tmp2)
-    else:
-        print '\nTemp Dev3:', float(e4_kernel[50])/max(e4_kernel)
+
 
     
     print '--------- Static method -------'
@@ -580,15 +575,7 @@ if setLength == 1 and compare == True:
     print 'Temp Dev :', np.mean(e4_static)
 
     print 'Ratio 1  :', max(e4_static)/np.mean(e4_static) # np.mean(e4_set[ind][:49]),  np.mean(e4_set[ind][51:]),
-    print 'Ratio 2  :', max(e4_static)/np.sort(e4_static)[::-1][1] # np.mean(e4_set[ind][:49]),  np.mean(e4_set[ind][51:]),
-    
-
-    print 'Temp Dev2:', float(e4_static[50])/np.mean(e4_static)
-    if(e4_static[50] == max(e4_static)):
-        tmp2 = e4_static.remove(max(e4_static))
-        print '\nTemp Dev3:', float(e4_static[50])/max(tmp2)
-    else:
-        print '\nTemp Dev3:', float(e4_static[50])/max(e4_static)
+    print 'Ratio 2  :', max(e4_static)/np.sort(e4_static)[::-1][1] # np.mean(e4_set[ind][:49]),  np.mean(e4_set[ind][51:]),    
 
 Data_type = dataType + '_cov%s'%(cov_mode) + '_penalty%s'%(index_penalty)
 pl.savefig(Data_type)

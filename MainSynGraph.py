@@ -275,7 +275,6 @@ def upper2Full(a, eps = 0):
 def solveProblem(gvx, index_penalty, alpha, beta, empCov_set, epsAbs = 1e-4, epsRel = 1e-4):
     # Solve the problem via SnapVX, being passed by empirical covariance matrices
     timestamps = empCov_set.__len__()
-#    print 'here1'
     for i in range(timestamps):
         #Add Node, edge to previous timestamp
         empCov = empCov_set[i] 
@@ -301,9 +300,6 @@ def solveProblem(gvx, index_penalty, alpha, beta, empCov_set, epsAbs = 1e-4, eps
         #Add rake nodes, edges
         gvx.AddNode(n_id + timestamps)
         gvx.AddEdge(n_id, n_id + timestamps, Objective=alpha*norm(S,1))
-#    print 'here2'    
-    t = time.time()
-    gvx.Solve( EpsAbs=epsAbs, EpsRel=epsRel, MaxIters = 2500 )
 #    gvx.Solve( EpsAbs=epsAbs, EpsRel=epsRel ,NumProcessors = 1,  Verbose = True)
     end = time.time() - t
     print 'time span = ',end
@@ -534,6 +530,8 @@ pl.rcParams.update({'font.size':14})
 print '\nAbs err :', np.mean(e1_set[ind]) # np.mean(e1_set[ind][:49]),  np.mean(e1_set[ind][51:]),
 print '\nF1 score:', np.mean(e2_set[ind]) # np.mean(e2_set[ind][:49]),  np.mean(e2_set[ind][51:]),
 print '\nTemp Dev:', np.mean(e4_set[ind]) # np.mean(e4_set[ind][:49]),  np.mean(e4_set[ind][51:]),
+print '\nRatio 1 :', max(e4_set[ind])/np.mean(e4_set[ind]) # np.mean(e4_set[ind][:49]),  np.mean(e4_set[ind][51:]),
+print '\nRatio 2 :', max(e4_set[ind])/np.sort(e4_set[ind])[::-1][1] # np.mean(e4_set[ind][:49]),  np.mean(e4_set[ind][51:]),
 if setLength == 1 and compare == True:
     pl.subplot(311)     
     pl.plot(x, e1_kernel, label = 'kernel')
@@ -552,11 +550,18 @@ if setLength == 1 and compare == True:
     print 'Abs err  :', np.mean(e1_kernel)
     print 'F1 score :', np.mean(e2_kernel)
     print 'Temp Dev :', np.mean(e4_kernel)
+    kernel_width = np.ceil(np.power(timestamps, 1.0/3 ))
+    e4_kernel = e4_kernel[kernel_width:]
+    print 'Ratio 1  :', max(e4_kernel)/np.mean(e4_kernel) # np.mean(e4_set[ind][:49]),  np.mean(e4_set[ind][51:]),
+    print 'Ratio 2  :', max(e4_kernel)/np.sort(e4_kernel)[::-1][1] # np.mean(e4_set[ind][:49]),  np.mean(e4_set[ind][51:]),
     
     print '--------- Static method -------'
     print 'Abs err  :', np.mean(e1_static)
     print 'F1 score :', np.mean(e2_static)
     print 'Temp Dev :', np.mean(e4_static)
+    print 'Ratio 1  :', max(e4_static)/np.mean(e4_static) # np.mean(e4_set[ind][:49]),  np.mean(e4_set[ind][51:]),
+    print 'Ratio 2  :', max(e4_static)/np.sort(e4_static)[::-1][1] # np.mean(e4_set[ind][:49]),  np.mean(e4_set[ind][51:]),
+    
 Data_type = dataType + '_cov%s'%(cov_mode) + '_penalty%s'%(index_penalty)
 pl.savefig(Data_type)
 pl.savefig(Data_type+'.eps', format = 'eps', bbox_inches = 'tight', dpi = 1000)

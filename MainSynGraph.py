@@ -535,12 +535,6 @@ print '\nTemp Dev:', np.mean(e4_set[ind]) # np.mean(e4_set[ind][:49]),  np.mean(
 print '\nRatio 1 :', max(e4_set[ind])/np.mean(e4_set[ind]) # np.mean(e4_set[ind][:49]),  np.mean(e4_set[ind][51:]),
 print '\nRatio 2 :', max(e4_set[ind])/np.sort(e4_set[ind])[::-1][1] # np.mean(e4_set[ind][:49]),  np.mean(e4_set[ind][51:]),
 
-if(e4_set[ind][50] == max(e4_set[ind])):
-    tmp2 = e4_set[ind].remove(max(e4_set[ind]))
-    print '\nTemp Dev3:', float(e4_set[ind][50])/max(tmp2)
-else:
-    print '\nTemp Dev3:', float(e4_set[ind][50])/max(e4_set[ind])
-
 
 if setLength == 1 and compare == True:
     pl.subplot(311)     

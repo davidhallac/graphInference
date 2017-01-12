@@ -299,7 +299,9 @@ def solveProblem(gvx, index_penalty, alpha, beta, empCov_set, epsAbs = 1e-4, eps
         
         #Add rake nodes, edges
         gvx.AddNode(n_id + timestamps)
-        gvx.AddEdge(n_id, n_id + timestamps, Objective=alpha*norm(S,1))
+        gvx.AddEdge(n_id, n_id + timestamps, Objective=alpha*norm(S,1))    
+    t = time.time()
+    gvx.Solve( EpsAbs=epsAbs, EpsRel=epsRel, Verbose=True, MaxIters=2500)
 #    gvx.Solve( EpsAbs=epsAbs, EpsRel=epsRel ,NumProcessors = 1,  Verbose = True)
     end = time.time() - t
     print 'time span = ',end

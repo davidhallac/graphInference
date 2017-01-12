@@ -530,18 +530,16 @@ pl.rcParams.update({'font.size':14})
 print '\nAbs err :', np.mean(e1_set[ind]) # np.mean(e1_set[ind][:49]),  np.mean(e1_set[ind][51:]),
 print '\nF1 score:', np.mean(e2_set[ind]) # np.mean(e2_set[ind][:49]),  np.mean(e2_set[ind][51:]),
 print '\nTemp Dev:', np.mean(e4_set[ind]) # np.mean(e4_set[ind][:49]),  np.mean(e4_set[ind][51:]),
-<<<<<<< HEAD
 print '\nRatio 1 :', max(e4_set[ind])/np.mean(e4_set[ind]) # np.mean(e4_set[ind][:49]),  np.mean(e4_set[ind][51:]),
 print '\nRatio 2 :', max(e4_set[ind])/np.sort(e4_set[ind])[::-1][1] # np.mean(e4_set[ind][:49]),  np.mean(e4_set[ind][51:]),
-=======
-print '\nTemp Dev2:', float(e4_set[ind][50])/np.mean(e4_set[ind])
+
 if(e4_set[ind][50] == max(e4_set[ind])):
     tmp2 = e4_set[ind].remove(max(e4_set[ind]))
     print '\nTemp Dev3:', float(e4_set[ind][50])/max(tmp2)
 else:
     print '\nTemp Dev3:', float(e4_set[ind][50])/max(e4_set[ind])
 
->>>>>>> 963c799ffcbff6c3a6c6238df77e0f0c40909721
+
 if setLength == 1 and compare == True:
     pl.subplot(311)     
     pl.plot(x, e1_kernel, label = 'kernel')
@@ -560,36 +558,36 @@ if setLength == 1 and compare == True:
     print 'Abs err  :', np.mean(e1_kernel)
     print 'F1 score :', np.mean(e2_kernel)
     print 'Temp Dev :', np.mean(e4_kernel)
-<<<<<<< HEAD
+
     kernel_width = np.ceil(np.power(timestamps, 1.0/3 ))
     e4_kernel = e4_kernel[kernel_width:]
     print 'Ratio 1  :', max(e4_kernel)/np.mean(e4_kernel) # np.mean(e4_set[ind][:49]),  np.mean(e4_set[ind][51:]),
     print 'Ratio 2  :', max(e4_kernel)/np.sort(e4_kernel)[::-1][1] # np.mean(e4_set[ind][:49]),  np.mean(e4_set[ind][51:]),
-=======
+
     print 'Temp Dev2:', float(e4_kernel[50])/np.mean(e4_kernel)
     if(e4_kernel[50] == max(e4_kernel)):
         tmp2 = e4_kernel.remove(max(e4_kernel))
         print '\nTemp Dev3:', float(e4_kernel[50])/max(tmp2)
     else:
         print '\nTemp Dev3:', float(e4_kernel[50])/max(e4_kernel)
->>>>>>> 963c799ffcbff6c3a6c6238df77e0f0c40909721
+
     
     print '--------- Static method -------'
     print 'Abs err  :', np.mean(e1_static)
     print 'F1 score :', np.mean(e2_static)
     print 'Temp Dev :', np.mean(e4_static)
-<<<<<<< HEAD
+
     print 'Ratio 1  :', max(e4_static)/np.mean(e4_static) # np.mean(e4_set[ind][:49]),  np.mean(e4_set[ind][51:]),
     print 'Ratio 2  :', max(e4_static)/np.sort(e4_static)[::-1][1] # np.mean(e4_set[ind][:49]),  np.mean(e4_set[ind][51:]),
     
-=======
+
     print 'Temp Dev2:', float(e4_static[50])/np.mean(e4_static)
     if(e4_static[50] == max(e4_static)):
         tmp2 = e4_static.remove(max(e4_static))
         print '\nTemp Dev3:', float(e4_static[50])/max(tmp2)
     else:
         print '\nTemp Dev3:', float(e4_static[50])/max(e4_static)
->>>>>>> 963c799ffcbff6c3a6c6238df77e0f0c40909721
+
 Data_type = dataType + '_cov%s'%(cov_mode) + '_penalty%s'%(index_penalty)
 pl.savefig(Data_type)
 pl.savefig(Data_type+'.eps', format = 'eps', bbox_inches = 'tight', dpi = 1000)

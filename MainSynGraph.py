@@ -301,7 +301,7 @@ def solveProblem(gvx, index_penalty, alpha, beta, empCov_set, epsAbs = 1e-4, eps
         gvx.AddNode(n_id + timestamps)
         gvx.AddEdge(n_id, n_id + timestamps, Objective=alpha*norm(S,1))    
     t = time.time()
-    gvx.Solve( EpsAbs=epsAbs, EpsRel=epsRel, Verbose=True, MaxIters=2500)
+    gvx.Solve( EpsAbs=epsAbs, EpsRel=epsRel, Verbose=False, MaxIters=2500)
 #    gvx.Solve( EpsAbs=epsAbs, EpsRel=epsRel ,NumProcessors = 1,  Verbose = True)
     end = time.time() - t
     print 'time span = ',end
@@ -530,10 +530,10 @@ pl.xlabel('Timestamp')
 pl.rcParams.update({'font.size':14})
 
 print '\nAbs err :', np.mean(e1_set[ind]) # np.mean(e1_set[ind][:49]),  np.mean(e1_set[ind][51:]),
-print '\nF1 score:', np.mean(e2_set[ind]) # np.mean(e2_set[ind][:49]),  np.mean(e2_set[ind][51:]),
-print '\nTemp Dev:', np.mean(e4_set[ind]) # np.mean(e4_set[ind][:49]),  np.mean(e4_set[ind][51:]),
-print '\nRatio 1 :', max(e4_set[ind])/np.mean(e4_set[ind]) # np.mean(e4_set[ind][:49]),  np.mean(e4_set[ind][51:]),
-print '\nRatio 2 :', max(e4_set[ind])/np.sort(e4_set[ind])[::-1][1] # np.mean(e4_set[ind][:49]),  np.mean(e4_set[ind][51:]),
+print 'F1 score:', np.mean(e2_set[ind]) # np.mean(e2_set[ind][:49]),  np.mean(e2_set[ind][51:]),
+print 'Temp Dev:', np.mean(e4_set[ind]) # np.mean(e4_set[ind][:49]),  np.mean(e4_set[ind][51:]),
+print 'Ratio 1 :', max(e4_set[ind])/np.mean(e4_set[ind]) # np.mean(e4_set[ind][:49]),  np.mean(e4_set[ind][51:]),
+print 'Ratio 2 :', max(e4_set[ind])/np.sort(e4_set[ind])[::-1][1] # np.mean(e4_set[ind][:49]),  np.mean(e4_set[ind][51:]),
 
 
 if setLength == 1 and compare == True:

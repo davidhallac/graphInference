@@ -1023,7 +1023,43 @@ def Prox_twonorm(A, eta):
     Z = numpy.dot(A, numpy.diag((numpy.ones(A.shape[0]) - eta/col_norms)*(col_norms > eta))) 
     return Z 
 
+def Bisection(a, eta):
+    sigma_u = max(a/eta)
+    sigma_l = min(a/eta) + 1/(a.shape[0])
+    sigma = (sigma_u + sigma_l)/2
+    max_iter = 100
+    eps  = 1e-4
+    for k in range(max_iter):
+        value = 0
+        sigma = (sigma_u + sigma_l)/2
+#         print 'low, upp, sigma are', sigma_l, sigma_u, sigma
+        for i in range(a.shape[0]):
+            value = value + max(a[i]/eta - sigma, 0)
+#         print 'value and sigma are', value, sigma
+        if value > 1 + eps:
+            sigma_l = sigma
+        elif value < 1 - eps:
+            sigma_u = sigma
+        else:
+            break
+#         print 'low, upp, sigma becomes', sigma_l, sigma_u, sigma, '\n'
+    return sigma
 
+def Prox_infnorm(A, eta):
+    col_norms = numpy.sum(abs(A), axis = 0) 
+    print col_norms
+    Z = numpy.zeros(A.shape)
+    for j in range(A.shape[0]):
+        if col_norms[j] > eta:
+#             print 'j = ',j
+            A_j  = A[:,j]
+            sigma = Bisection(A_j, eta)
+#             print sigma, A_j,  eta*Prox_onenorm(A_j/eta, sigma), '\n'
+            Z_j = A_j - eta*Prox_onenorm(A_j/eta, sigma)
+            print Z_j
+            Z[:,j] = Z_j
+    return Z 
+    
 def Prox_penalty(a_ij, a_ji, eta, index_penalty):
     n = int((-1  + numpy.sqrt(1+ 8*a_ij.shape[0]))/2)      
     z_ij = (a_ij+a_ji)/2

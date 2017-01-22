@@ -1059,7 +1059,7 @@ def Prox_infnorm(A, eta):
             print Z_j
             Z[:,j] = Z_j
     return Z 
-    
+
 def Prox_penalty(a_ij, a_ji, eta, index_penalty):
     n = int((-1  + numpy.sqrt(1+ 8*a_ij.shape[0]))/2)      
     z_ij = (a_ij+a_ji)/2
@@ -1080,6 +1080,7 @@ def Prox_penalty(a_ij, a_ji, eta, index_penalty):
             e = Prox_twonorm(A_ij - A_ji + d, alpha*eta) -d  
         elif index_penalty == 4:
             e = Prox_infnorm(A_ij - A_ji + d, alpha*eta) -d 
+            print 'calculate e?', e
         else:
             MaxIter = 100   
             eps = 1e-3

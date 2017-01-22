@@ -1047,7 +1047,7 @@ def Bisection(a, eta):
 
 def Prox_infnorm(A, eta):
     col_norms = numpy.sum(abs(A), axis = 0) 
-    print col_norms
+    # print col_norms
     Z = numpy.zeros(A.shape)
     for j in range(A.shape[0]):
         if col_norms[j] > eta:
